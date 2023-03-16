@@ -20,7 +20,7 @@ public class SnakeGameUnitSystem : MonoBehaviour
 
     private GameObject _snakeGameUnit;
 
-
+    // Чё-то глючит гит на VS
     public Vector3 CURRENT_HEAD_LOCK_POS;
 
     private void Awake()
