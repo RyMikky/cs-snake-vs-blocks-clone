@@ -1,4 +1,4 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,7 +20,7 @@ public class SnakeGameUnitSystem : MonoBehaviour
 
     private GameObject _snakeGameUnit;
 
-    // Чё-то глючит гит на VS
+    // Р§С‘-С‚Рѕ РіР»СЋС‡РёС‚ РіРёС‚ РЅР° VS
     public Vector3 CURRENT_HEAD_LOCK_POS;
 
     private void Awake()
@@ -51,13 +51,13 @@ public class SnakeGameUnitSystem : MonoBehaviour
         UpdateSnakeElementsPosition();
     }
 
-    // добавляет новый элемент в змею
+    // РґРѕР±Р°РІР»СЏРµС‚ РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ РІ Р·РјРµСЋ
     public void AddSnakeElement(ref GameObject snakeElement)
     {
         _snakeElements.Add(snakeElement);
     }
 
-    // удаляет крайний элемент змеи
+    // СѓРґР°Р»СЏРµС‚ РєСЂР°Р№РЅРёР№ СЌР»РµРјРµРЅС‚ Р·РјРµРё
     public void RemoveLastSnakeElements()
     {
         if (GetElementsCount() != 0)
@@ -66,7 +66,7 @@ public class SnakeGameUnitSystem : MonoBehaviour
         }
     }
 
-    // возвращет количество элементов в змее
+    // РІРѕР·РІСЂР°С‰РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ Р·РјРµРµ
     public int GetElementsCount()
     {
         return _snakeElements.Count;
@@ -76,65 +76,65 @@ public class SnakeGameUnitSystem : MonoBehaviour
     {
         if (scale != _elementScaler)
         {
-            _elementScaler = scale; // назначаем новый элемент
+            _elementScaler = scale; // РЅР°Р·РЅР°С‡Р°РµРј РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚
 
             for (int i = 0; i < GetElementsCount(); ++i)
             {
-                // пролучаем систему элемента змеи
+                // РїСЂРѕР»СѓС‡Р°РµРј СЃРёСЃС‚РµРјСѓ СЌР»РµРјРµРЅС‚Р° Р·РјРµРё
                 var system = _snakeElements[i].GetComponent<SnakeElementSystem>();
-                // устанавливаем скалер
+                // СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃРєР°Р»РµСЂ
                 system.SetElementScale(_elementScaler);
             }
         }
     }
 
-    // конструктор тестовой змейки
+    // РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С‚РµСЃС‚РѕРІРѕР№ Р·РјРµР№РєРё
     private void TestSnakeConstruct()
     {
         for (int i = 0; i < 17; ++i)
         {
-            // создаём объект элемента змеи в нулевом трансформе
+            // СЃРѕР·РґР°С‘Рј РѕР±СЉРµРєС‚ СЌР»РµРјРµРЅС‚Р° Р·РјРµРё РІ РЅСѓР»РµРІРѕРј С‚СЂР°РЅСЃС„РѕСЂРјРµ
             GameObject snake_element = Instantiate(_snakeElementPrefab, transform) as GameObject;
 
             if (i == 0)
             {
-                // первый элемент создаётся в нулевой локальной точке и на 25% больше остальных
+                // РїРµСЂРІС‹Р№ СЌР»РµРјРµРЅС‚ СЃРѕР·РґР°С‘С‚СЃСЏ РІ РЅСѓР»РµРІРѕР№ Р»РѕРєР°Р»СЊРЅРѕР№ С‚РѕС‡РєРµ Рё РЅР° 25% Р±РѕР»СЊС€Рµ РѕСЃС‚Р°Р»СЊРЅС‹С…
                 snake_element.GetComponent<SnakeElementSystem>()
                     .SetElementScale(_elementScaler * 1.25f)
                     .SetElementType(SnakeElementSystem.SnakeElementType.Head);
-                // добавляем элемент в список звеньев
+                // РґРѕР±Р°РІР»СЏРµРј СЌР»РµРјРµРЅС‚ РІ СЃРїРёСЃРѕРє Р·РІРµРЅСЊРµРІ
                 _snakeElements.Add(snake_element);
             }
             else
             {
-                // создаём элементы звеньев
+                // СЃРѕР·РґР°С‘Рј СЌР»РµРјРµРЅС‚С‹ Р·РІРµРЅСЊРµРІ
                 snake_element.GetComponent<SnakeElementSystem>()
                     .SetElementScale(_elementScaler)
                     .SetElementType(SnakeElementSystem.SnakeElementType.Link);
 
-                // для определения стартового положения n-ого элемента берем локальный трансформ предыдущего
+                // РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ СЃС‚Р°СЂС‚РѕРІРѕРіРѕ РїРѕР»РѕР¶РµРЅРёСЏ n-РѕРіРѕ СЌР»РµРјРµРЅС‚Р° Р±РµСЂРµРј Р»РѕРєР°Р»СЊРЅС‹Р№ С‚СЂР°РЅСЃС„РѕСЂРј РїСЂРµРґС‹РґСѓС‰РµРіРѕ
                 Vector3 element_position = _snakeElements[i - 1].transform.localPosition;
 
                 if (i == 1)
                 {
-                    // если текущий индекс первый после головы, то смещение берется с поправкой на скалер умноженный на 112,5%
+                    // РµСЃР»Рё С‚РµРєСѓС‰РёР№ РёРЅРґРµРєСЃ РїРµСЂРІС‹Р№ РїРѕСЃР»Рµ РіРѕР»РѕРІС‹, С‚Рѕ СЃРјРµС‰РµРЅРёРµ Р±РµСЂРµС‚СЃСЏ СЃ РїРѕРїСЂР°РІРєРѕР№ РЅР° СЃРєР°Р»РµСЂ СѓРјРЅРѕР¶РµРЅРЅС‹Р№ РЅР° 112,5%
                     element_position.z += (_snakeElements[i - 1].GetComponent<SnakeElementSystem>().GetElementScaler() * 1.125f);
                 }
                 else
                 {
-                    // все последующие элементы, берутся с поправкой на скалер умноженный на 125%
+                    // РІСЃРµ РїРѕСЃР»РµРґСѓСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹, Р±РµСЂСѓС‚СЃСЏ СЃ РїРѕРїСЂР°РІРєРѕР№ РЅР° СЃРєР°Р»РµСЂ СѓРјРЅРѕР¶РµРЅРЅС‹Р№ РЅР° 125%
                     element_position.z += (_snakeElements[i - 1].GetComponent<SnakeElementSystem>().GetElementScaler() * 1.25f);
                 }
 
-                // задаём локальную позицию элемента в змее
+                // Р·Р°РґР°С‘Рј Р»РѕРєР°Р»СЊРЅСѓСЋ РїРѕР·РёС†РёСЋ СЌР»РµРјРµРЅС‚Р° РІ Р·РјРµРµ
                 snake_element.transform.localPosition = element_position;
-                // добавляем элемент в список звеньев
+                // РґРѕР±Р°РІР»СЏРµРј СЌР»РµРјРµРЅС‚ РІ СЃРїРёСЃРѕРє Р·РІРµРЅСЊРµРІ
                 _snakeElements.Add(snake_element);
             }
         }
     }
 
-    // обновление позиций элементов змейки по головному элементу
+    // РѕР±РЅРѕРІР»РµРЅРёРµ РїРѕР·РёС†РёР№ СЌР»РµРјРµРЅС‚РѕРІ Р·РјРµР№РєРё РїРѕ РіРѕР»РѕРІРЅРѕРјСѓ СЌР»РµРјРµРЅС‚Сѓ
     private void UpdateSnakeElementsPosition()
     {
         if (GetElementsCount() > 0)
@@ -148,9 +148,9 @@ public class SnakeGameUnitSystem : MonoBehaviour
 
             for (int i = 0; i < count; ++i)
             {
-                // берем позицию текущего элемента
+                // Р±РµСЂРµРј РїРѕР·РёС†РёСЋ С‚РµРєСѓС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°
                 Vector3 element_local_position = _snakeElements[i].transform.localPosition;
-                // считаем разницу позиции элемента по оси X
+                // СЃС‡РёС‚Р°РµРј СЂР°Р·РЅРёС†Сѓ РїРѕР·РёС†РёРё СЌР»РµРјРµРЅС‚Р° РїРѕ РѕСЃРё X
                 float delta_x = head_local_position.x - element_local_position.x;
 
                 if (Mathf.Abs(delta_x) > 0)
