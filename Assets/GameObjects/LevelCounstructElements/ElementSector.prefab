@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3230058973389247330}
   - component: {fileID: 7004669869627867548}
   - component: {fileID: 7004669869627867555}
+  - component: {fileID: 3814737877758144524}
   - component: {fileID: 7004669869627867554}
   m_Layer: 0
   m_Name: ElementSector
@@ -62,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9a8d8547deafe6247bff13217ba0a8e1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -84,6 +85,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3814737877758144524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3605950351777706807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26208ec0542780a4297d4d56140ec536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dissolveDuration: 1
 --- !u!65 &7004669869627867554
 BoxCollider:
   m_ObjectHideFlags: 0

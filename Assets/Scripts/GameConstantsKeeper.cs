@@ -166,7 +166,7 @@ public class GameConstantsKeeper : MonoBehaviour
         {
             return __BASIC_COLOR_PALETTE__[BoxColorPalette.none];
         }
-        else if (score / 3 > __BASIC_COLOR_PALETTE__.Count)
+        else if (score / 3 > __BASIC_COLOR_PALETTE__.Count - 1)
         {
             return __BASIC_COLOR_PALETTE__[(BoxColorPalette)(__BASIC_COLOR_PALETTE__.Count - 1)];
         }

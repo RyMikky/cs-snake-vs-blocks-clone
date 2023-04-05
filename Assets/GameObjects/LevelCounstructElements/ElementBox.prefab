@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7843877046314300171}
   - component: {fileID: 8056953809447449453}
   m_Layer: 0
-  m_Name: Text
+  m_Name: TextObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +25,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3191997548270421042}
-  m_LocalRotation: {x: -0.21643952, y: 0, z: 0, w: 0.97629607}
+  m_LocalRotation: {x: -0.21643952, y: -0, z: -0, w: 0.97629607}
   m_LocalPosition: {x: 0, y: 0, z: 0.5}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -186,7 +186,7 @@ GameObject:
   - component: {fileID: 3822438048791963149}
   m_Layer: 0
   m_Name: ElementBox
-  m_TagString: Untagged
+  m_TagString: GameBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -269,11 +269,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21b09531c08c9cf449d56d35c0dafbb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dissolveDuration: 1
+  solveDuration: 1
   _boxConstructMode: 1
   _colorPalette: 0
-  _boxScore: 5
+  _boxValue: 0
+  _showBoxValue: 1
   _boxScaler: 1
   _boxShader: {fileID: -6465566751694194690, guid: cf1e261ff11356c4eb345901110dec39, type: 3}
+  _textObject: {fileID: 3191997548270421042}
   _boxText: {fileID: 8056953809447449453}
   INC_MAIN_COLOR: {r: 0, g: 0, b: 0, a: 0}
   INC_PULSE_COLOR: {r: 0, g: 0, b: 0, a: 0}

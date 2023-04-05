@@ -427,8 +427,20 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8624280951328946714, guid: 39a4d42e0fc17c04ebe5d2624268562f, type: 3}
+      propertyPath: _snakeUnitPrefab
+      value: 
+      objectReference: {fileID: 5430267169939774665, guid: 1e5a40e1093686e49af8f979ee797f49, type: 3}
+    - target: {fileID: 8624280951328946714, guid: 39a4d42e0fc17c04ebe5d2624268562f, type: 3}
       propertyPath: _gameLevelMotionSpeed
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8624280951328946714, guid: 39a4d42e0fc17c04ebe5d2624268562f, type: 3}
+      propertyPath: _levelElementBoxMaxCount
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8624280951328946714, guid: 39a4d42e0fc17c04ebe5d2624268562f, type: 3}
+      propertyPath: _levelElementBoxMaxValue
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 8624280951328946714, guid: 39a4d42e0fc17c04ebe5d2624268562f, type: 3}
       propertyPath: _gameLevelElementsVisibleCount

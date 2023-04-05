@@ -44,10 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1bb77ce25e2da5419a14df24e991239, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dissolveDuration: 1
+  solveDuration: 1
   _elementBorderPrefab: {fileID: 2914467703694329416, guid: 789d7c151628b97409ba36e456a0999e, type: 3}
   _elementSectorPrefab: {fileID: 3605950351777706807, guid: 21e6edbd11dc8594288c225ca2adbd00, type: 3}
   _elementBoxPrefab: {fileID: 8716603799612582565, guid: 36c1cb85445d75a4bbc7869fc6a0dc29, type: 3}
-  _borderType: 0
+  _elementSnakePrefab: {fileID: 6613297857288165031, guid: b74e04b91a8311e4bbca5a2cecb6f0af, type: 3}
+  _activationMode: 0
+  _borderType: 3
   _elementSectorCount: 6
   _elementBoxCout: 0
-  _elementBoxScale: 0
+  _elementBoxScale: 1
+  _elementBoxMinValue: 1
+  _elementBoxMaxValue: 10
+  _elementsXpositions: []

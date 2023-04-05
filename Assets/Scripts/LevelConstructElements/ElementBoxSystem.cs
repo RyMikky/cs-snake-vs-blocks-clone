@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using static GameConstantsKeeper;
 
-public class ElementBoxSystem : MonoBehaviour
+public class ElementBoxSystem : DissolvableObject
 {
     public enum BoxConstructMode
     {
@@ -13,10 +14,11 @@ public class ElementBoxSystem : MonoBehaviour
 
     public BoxConstructMode _boxConstructMode;
     public GameConstantsKeeper.BoxColorPalette _colorPalette;
-    public int _boxScore;
-    private int _lastScore;
-    public ElementBoxSystem SetBoxScore(int score) { _boxScore = score; return this; }
-    public int GetBoxScore() { return _boxScore; }
+    public int _boxValue;
+    private int _lastValue;
+    public ElementBoxSystem SetBoxValue(int value) { _boxValue = value; return this; }
+    public int GetBoxValue() { return _boxValue; }
+    public bool _showBoxValue = true;
 
     public float _boxScaler;
     private float _lastScaler;
@@ -24,6 +26,7 @@ public class ElementBoxSystem : MonoBehaviour
     public float GetBoxScaler() { return _boxScaler; }
 
     public Shader _boxShader;
+    public GameObject _textObject;
     public TextMeshPro _boxText;
 
     private GameConstantsKeeper _gameKeeper;
@@ -52,7 +55,12 @@ public class ElementBoxSystem : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_lastScore != _boxScore)
+        //if (_textObject.activeSelf != _showBoxValue)
+        //{
+        //    _textObject.SetActive(_showBoxValue);
+        //}
+
+        if (_lastValue != _boxValue)
         {
             UpdateBoxScore();         // пересчет внутреннего значения множителя очков
             UpdateBoxPalette();       // обновление цветовой палитры блока
@@ -71,16 +79,19 @@ public class ElementBoxSystem : MonoBehaviour
     /// </summary>
     void UpdateBoxScore()
     {
-        _lastScore = _boxScore;
+        if (_showBoxValue)
+        {
+            _lastValue = _boxValue;
 
-        if (_lastScore < 0)
-        {
-            _boxText.text = "0";
-        }
-        else
-        {
-            _boxText.text = _lastScore.ToString();
-        }
+            if (_lastValue < 0)
+            {
+                _boxText.text = "0";
+            }
+            else
+            {
+                _boxText.text = _lastValue.ToString();
+            }
+        }  
     }
     /// <summary>
     /// Запарашивает цветовую палетку в классе-хранителе констант.
@@ -95,7 +106,7 @@ public class ElementBoxSystem : MonoBehaviour
                 _boxPalette = _gameKeeper.GetColorPaletteByType(_colorPalette);
                 break;
             case BoxConstructMode.onBoxScore:
-                _boxPalette = _gameKeeper.GetColorPaletteByScore(_lastScore);
+                _boxPalette = _gameKeeper.GetColorPaletteByScore(_lastValue);
                 break;
         }
 
@@ -128,10 +139,10 @@ public class ElementBoxSystem : MonoBehaviour
     /// </summary>
     public void DecrementBoxScore()
     {
-        if (_lastScore > 1)
+        if (_lastValue > 1)
         {
             // пока мультипликатор ящика больше одного
-            _boxScore--;        // декреммируем номер и вызываем переопределение цвета
+            _boxValue--;        // декреммируем номер и вызываем переопределение цвета
         }
         else
         {
@@ -142,6 +153,18 @@ public class ElementBoxSystem : MonoBehaviour
     public void DestroyTheBox()
     {
 
+    }
+
+    public void VanishBoxAtTime(float time)
+    {
+        float start_time = Time.time;
+        float end_time = (Time.time + time);
+    }
+
+    public ElementBoxSystem ShowBoxValue(bool show)
+    {
+        _showBoxValue = show;
+        return this;
     }
 
 }

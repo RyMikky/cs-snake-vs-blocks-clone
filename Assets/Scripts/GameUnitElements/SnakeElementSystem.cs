@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SnakeElementSystem : MonoBehaviour
+public class SnakeElementSystem : DissolvableObject
 {
     public enum SnakeElementType
     {
-        Head, Link
+        Head, Link, Food
     } 
 
     public SnakeElementType _elementType = SnakeElementType.Link;
+    public ParticleSystem _foodParticle;
 
     private Transform _basicObject;
     public float _objectScaler = 1.0f;
