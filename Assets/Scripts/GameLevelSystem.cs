@@ -163,4 +163,49 @@ public class GameLevelSystem : MonoBehaviour
             _gameLevelElements.AddLast(element);
         }
     }
+
+    public void MovingLevelDown(float range)
+    {
+        // метод перемещает все элементы уровня вперед согласно заданной скорости
+        foreach (GameObject element in _gameLevelElements)
+        {
+            Vector3 position = element.transform.position;
+            position.z = position.z - range;
+
+            element.transform.position = position;
+        }
+
+        foreach (GameObject element in _gameDissolvedElements)
+        {
+            // если элемент еще существует, то действуем так же как и цикле выше
+            Vector3 position = element.transform.position;
+            position.z = position.z - range;
+
+            element.transform.position = position;
+        }
+    }
+
+    public void IncreaseLevelSpeed(float value)
+    {
+        if ((_gameLevelMotionSpeed + value) < 1.0f)
+        {
+            _gameLevelMotionSpeed += value;
+        }
+        else
+        {
+            _gameLevelMotionSpeed = 1;
+        }
+    }
+
+    public void DecreaseLevelSpeed(float value)
+    {
+        if ((_gameLevelMotionSpeed + value) > 0.05f)
+        {
+            _gameLevelMotionSpeed += value;
+        }
+        else
+        {
+            _gameLevelMotionSpeed = 0.05f;
+        }
+    }
 }

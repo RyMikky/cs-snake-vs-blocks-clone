@@ -16,14 +16,17 @@ public class SnakeElementSystem : DissolvableObject
     public SnakeElementType _elementType = SnakeElementType.Link;
     public ParticleSystem _foodParticle;
 
-    public GameObject _basicGameObject;
+    private GameObject _basicGameObject;
     private Transform _basicObjectTransform;                             // базовый трансформ экземпляра
     private SphereCollider _basicTrigger;                                // базовый триггер экземпляра
+
     private GameObject _baseSnakeSystem;                                 // базовая система обработки змейки
     private SnakeGameUnitSystem _gameUnitSystem;                         // ссылка на класс-конструктор змейки
 
     private GameObject _baseGameLevelElement;                            // базовый элемент уровня на котором создаётся еда
     private GameLevelElementSystem _gameLevelElementSystem;              // ссылка на класс-конструктор элемента уровня
+
+    private GameLevelSystem _gameLevelSystem;                            // базовая система управления уровнем
 
     // ------------------------ элементы для работы мышки -----------------
 
@@ -33,17 +36,29 @@ public class SnakeElementSystem : DissolvableObject
 
     public float _objectScaler = 1.0f;
 
-    // ------------------------ элементы для работы с текстовым полем ----
+    // ------------------------ элементы для работы с текстовым полем -----
 
     public GameObject _textObject;
     public TextMeshPro _snakeText;
     public int _snakeLinksCount = 0;
+
+    // ------------------------ элементы для работы звуков ----------------
+
+    private GameSoundSystem _soundSystem;
+
+    // ------------------------ элементы для управления стрелками ---------
+
+    private float _h, _v;                            // значения со стрелок
+
+    public float _maxHorizontalLevel = 1.0f;
 
     private void Awake()
     {
         _basicGameObject = gameObject;
         _basicObjectTransform = GetComponent<Transform>();
         _basicTrigger = GetComponent<SphereCollider>();
+        _soundSystem = FindObjectOfType<GameSoundSystem>();
+        _gameLevelSystem = FindObjectOfType<GameLevelSystem>();
 
         UpdateLinksCount();
     }
@@ -103,6 +118,7 @@ public class SnakeElementSystem : DissolvableObject
     {
         UpdateTriggerRadius();                  // проверяет и обноваляет радиус коллайдера триггера
         UpdateLinksCount();                     // обновляет отображаемое числовое значение на шарике
+        KeyBoardController();                   // управление с клавиатуры
         MouseController();                      // управление мышкой
     }
 
@@ -141,6 +157,7 @@ public class SnakeElementSystem : DissolvableObject
         }
     }
 
+
     // обработка столкновений с другими объектами
     private void OnTriggerEnter(Collider other)
     {
@@ -150,6 +167,21 @@ public class SnakeElementSystem : DissolvableObject
             case SnakeElementType.Food:
                 break;
             case SnakeElementType.Link:
+
+                if (other.gameObject.tag == "BoxLTrigger")
+                {
+                    Vector3 current_transform = gameObject.transform.position;
+                    current_transform.x -= 0.5f;
+                    gameObject.transform.position = current_transform;
+                }
+
+                else if (other.gameObject.tag == "BoxRTrigger")
+                {
+                    Vector3 current_transform = gameObject.transform.position;
+                    current_transform.x += 0.5f;
+                    gameObject.transform.position = current_transform;
+                }
+
                 break;
 
             // обработка событий столкновений для головы змейки
@@ -161,11 +193,41 @@ public class SnakeElementSystem : DissolvableObject
                     _gameUnitSystem.AddSnakeNewLink();
                     // проигрываем вспышку поедания еды
                     _foodParticle.Play();
-
+                    // проигрываем звук "поедания"
+                    _soundSystem.PlaySnakeEat();
                     // запускаем удаление "скушанной" еды с элемента уровня
                     other.gameObject
                         .GetComponent<SnakeElementSystem>()
                         .DestroyFoodElement();
+                }
+
+                else if (other.gameObject.tag == "BoxFTrigger")
+                {
+                    // если на пути появился ящик
+                    other.gameObject
+                        .GetComponentInParent<ElementBoxSystem>()
+                        .DecrementBoxScore();
+                    // проигрываем звук "столкновения"
+                    _soundSystem.PlayBoxBreak();
+                    // удаляем звено из змейки
+                    _gameUnitSystem.RemoveLastSnakeElements(0.2f);
+
+                    // двигаем весь уровень назад
+                    _gameLevelSystem.MovingLevelDown(4.5f);
+                }
+
+                else if(other.gameObject.tag == "BoxLTrigger")
+                {
+                    Vector3 current_transform = gameObject.transform.position;
+                    current_transform.x -= 0.5f;
+                    gameObject.transform.position = current_transform;
+                }
+
+                else if (other.gameObject.tag == "BoxRTrigger")
+                {
+                    Vector3 current_transform = gameObject.transform.position;
+                    current_transform.x += 0.5f;
+                    gameObject.transform.position = current_transform;
                 }
 
                 break; 
@@ -218,6 +280,48 @@ public class SnakeElementSystem : DissolvableObject
             lastHeadPosition = gameObject.transform.position;
             //lastMousePosition = Input.mousePosition;
             _lastMousePosition = Input.mousePosition;
+        }
+    }
+
+    // получение данных по горизонтали и вертикали со стрелок
+    void Inputs()
+    {
+        _h = Input.GetAxis("Horizontal"); _v = Input.GetAxis("Vertical");
+    }
+
+    [ExecuteInEditMode]
+    private void KeyBoardController()
+    {
+        // управление работает только для головы
+        if (_elementType == SnakeElementType.Head)
+        {
+            Inputs();   // голова постоянно будет получать данные со стрелок
+
+            Vector3 current_transform = gameObject.transform.position;
+            current_transform.x -= _h;
+
+            if (Mathf.Abs(current_transform.x) > Mathf.Abs(_maxHorizontalLevel)) 
+            { 
+                if (_h < 0)
+                {
+                    current_transform.x = _maxHorizontalLevel;
+                }
+                else
+                {
+                    current_transform.x = -_maxHorizontalLevel;
+                }
+            }
+
+            gameObject.transform.position = current_transform;
+
+            if (_v > 0)
+            {
+                _gameLevelSystem.IncreaseLevelSpeed(_v * 0.01f);
+            }
+            else
+            {
+                _gameLevelSystem.DecreaseLevelSpeed(_v * 0.01f);
+            }
         }
     }
 }

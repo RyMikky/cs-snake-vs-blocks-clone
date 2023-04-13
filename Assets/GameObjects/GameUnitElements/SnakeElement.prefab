@@ -276,13 +276,13 @@ MonoBehaviour:
   solveDuration: 1
   _elementType: 1
   _foodParticle: {fileID: 1863138021089735347}
-  _basicGameObject: {fileID: 0}
   lastMousePosition: {x: 0, y: 0, z: 0}
   lastHeadPosition: {x: 0, y: 0, z: 0}
   _objectScaler: 1
   _textObject: {fileID: 5025836460205767043}
   _snakeText: {fileID: 7090847554098704113}
   _snakeLinksCount: 0
+  _maxHorizontalLevel: 11
 --- !u!54 &6543772769409926164
 Rigidbody:
   m_ObjectHideFlags: 0

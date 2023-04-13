@@ -28,11 +28,14 @@ public class ElementBoxSystem : DissolvableObject
     public Shader _boxShader;
     public GameObject _textObject;
     public TextMeshPro _boxText;
+    public ParticleSystem _boxParticle;
+    public GameObject _boxTriggers;
 
     private GameConstantsKeeper _gameKeeper;
     private Transform _boxTransform;
     private MeshRenderer _boxMeshRenderer;
     private GameConstantsKeeper.ColorPallete _boxPalette;
+    private GameObject _basicGameObject;
 
     [Header("Деббаговый блок")]
     public Color INC_MAIN_COLOR;
@@ -41,6 +44,7 @@ public class ElementBoxSystem : DissolvableObject
 
     private void Awake()
     {
+        _basicGameObject = gameObject;
         _gameKeeper = FindObjectOfType<GameConstantsKeeper>();
         _boxMeshRenderer = GetComponent<MeshRenderer>();
         _boxTransform = GetComponent<Transform>();
@@ -55,11 +59,6 @@ public class ElementBoxSystem : DissolvableObject
 
     private void FixedUpdate()
     {
-        //if (_textObject.activeSelf != _showBoxValue)
-        //{
-        //    _textObject.SetActive(_showBoxValue);
-        //}
-
         if (_lastValue != _boxValue)
         {
             UpdateBoxScore();         // пересчет внутреннего значения множителя очков
@@ -146,19 +145,26 @@ public class ElementBoxSystem : DissolvableObject
         }
         else
         {
-            DestroyTheBox();
+            // выключаем все триггеры чтобы не было коллизий
+            _boxTriggers.SetActive(false);
+            DestroyTheBox();    // запускаем удаление ящика
         }
     }
 
     public void DestroyTheBox()
     {
-
+        // делаем "взрыв"
+        _boxParticle.Play();
+        // проигрываем звук разламывания ящика
+        FindObjectOfType<GameSoundSystem>().PlayBoxBreak();
+        // запрашиваем у родителя растворение и удаление текущего ящика
+        GetComponentInParent<GameLevelElementSystem>()
+            .DestroyBoxElement(0.3f, ref _basicGameObject);
     }
 
-    public void VanishBoxAtTime(float time)
+    public void PlayBoxParticle()
     {
-        float start_time = Time.time;
-        float end_time = (Time.time + time);
+        _boxParticle.Play();
     }
 
     public ElementBoxSystem ShowBoxValue(bool show)

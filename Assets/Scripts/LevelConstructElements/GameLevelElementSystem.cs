@@ -333,6 +333,37 @@ public class GameLevelElementSystem : DissolvableObject
         _elementBorders.Add(border);
     }
 
+    // удаляет ящик с элемента уровня
+    public void DestroyBoxElement(float time, ref GameObject element)
+    {
+        float minTime = time * (1 - 0.1f);       // минимальное время в диапазоне time - 20%
+        float maxTime = time * (1 + 0.1f);       // максимальное время в диапазоне time + 20%
+
+        if (_elementBoxes.Count != 0 && _elementBoxes.Contains(element))
+        {
+            int index = 0;
+
+            for (int i = 0; i < _elementBoxes.Count; i++)
+            {
+                if (_elementBoxes[i] == element)
+                {
+                    index = i; break;
+                }
+            }
+
+            _elementBoxes[index].GetComponent<DissolvableObject>()
+                    .StartDissolving((float)(_random.NextDouble() * (maxTime - minTime) + minTime));
+            Destroy(element, (float)(_random.NextDouble() * (maxTime - minTime) + minTime));
+            _elementBoxes.Remove(element);
+        }
+        else
+        {
+            if (element == null)
+            {
+                Debug.Log("GameLevelElementSystem::DestroyBoxElement::element == null");
+            }
+        }
+    }
     // удаляет элемент еды с уровня
     public void DestroyFoodElement(float time, ref GameObject element)
     {
