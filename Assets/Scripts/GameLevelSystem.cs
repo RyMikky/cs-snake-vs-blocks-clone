@@ -78,6 +78,7 @@ public class GameLevelSystem : MonoBehaviour
         ELEMENTS_SIZE = _gameLevelElements.Count;
     }
 
+    // перемещение всех элементов уровня вперед согласно заданной скорости
     void UpdateElementsPosition()
     {
         // метод перемещает все элементы уровня вперед согласно заданной скорости
@@ -117,7 +118,7 @@ public class GameLevelSystem : MonoBehaviour
         }
         
     }
-
+    // удаление первого элемента списка вышедшего за область видимости
     void UpdateOutOfRangeElements()
     {
         Vector3 position = _gameLevelElements.First.Value.transform.position;
@@ -134,7 +135,7 @@ public class GameLevelSystem : MonoBehaviour
             _gameLevelElements.RemoveFirst();
         }
     }
-
+    // создание новых элементов уровня в конце списка при удалении с начала
     void UpdateElementsCount()
     {
         if (_gameLevelElements.Count < _gameLevelElementsVisibleCount)

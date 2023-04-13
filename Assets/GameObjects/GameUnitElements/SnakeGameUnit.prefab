@@ -44,6 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a4c57082f72ffa4a89977858dac047a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _snakeUnitMode: 2
   _snakeElementPrefab: {fileID: 6613297857288165031, guid: b74e04b91a8311e4bbca5a2cecb6f0af, type: 3}
   _snakeElements: []
   _elementScaler: 1
+  CURRENT_HEAD_LOCK_POS: {x: 0, y: 0, z: 0}

@@ -68,8 +68,12 @@ public class GameLevelElementSystem : DissolvableObject
     private Vector3 _sectorGeometryScaler = Vector3.zero;                      // скалер размеров сектора
     private System.Random _random = new System.Random();
 
+    private GameObject _baseLevelElementGameObject;
+
     private void UpdatePrefabsScalers()
     {
+        _baseLevelElementGameObject = GetComponent<GameObject>();
+
         if (_elementBorderPrefab != null)
              _borderGeometryScaler = _elementBorderPrefab.GetComponent<Transform>().localScale;
 
@@ -90,6 +94,7 @@ public class GameLevelElementSystem : DissolvableObject
         }
     }
 
+    // реконструирует элементы уровня по заданым заранее параметрам 
     public void GameLevelElementReconstruct()
     {
         DestroyAllElements();
@@ -98,7 +103,7 @@ public class GameLevelElementSystem : DissolvableObject
         BoxesConstruct(0);                                  // конструирует ящики на элементе уровня
         FoodConstruct(0);                                   // конструирует "еду" на элементе уровня
     }
-
+    // общая функция проециорвания всех элементов уровня по заданым заранее параметрам 
     public void SolveGameLevelElement(float time)
     {
         DestroyAllElements();                               // на всякий пожарный
@@ -108,6 +113,7 @@ public class GameLevelElementSystem : DissolvableObject
         FoodConstruct(time);                                // конструирует "еду" на элементе уровня
     }
 
+    // проецирует на элемент карты напольные сектора с заданым временем появления
     private void SectorsConstruct(float time)
     {
         // берем крайнюю правую координату для локальной позиции сектора
@@ -149,7 +155,7 @@ public class GameLevelElementSystem : DissolvableObject
             }
         }
     }
-
+    // проецирует на элемент карты границы уровня с заданым временем появления
     private void BordersConstruct(float time)
     {
         if (_borderType == BorderType.None) return;
@@ -179,7 +185,7 @@ public class GameLevelElementSystem : DissolvableObject
                 break;
         }
     }
-
+    // проецирует на элемент карты ящики с заданым временем появления
     private void BoxesConstruct(float time)
     {
         System.Random random = new System.Random();
@@ -243,7 +249,7 @@ public class GameLevelElementSystem : DissolvableObject
             }
         }
     }
-
+    // проецирует на элемент карты еду для змейки с заданым временем появления
     private void FoodConstruct(float time)
     {
         System.Random random = new System.Random();
@@ -278,9 +284,13 @@ public class GameLevelElementSystem : DissolvableObject
             element_position.y = (_elementBoxScale / 2) + (_sectorGeometryScaler.y / 2);
             // переназначаем трансформ
             food.transform.localPosition = element_position;
-
+            // назначаем tag еды змеи
+            food.tag = "SnakeFood";
             var SnakeSystem = food.GetComponent<SnakeElementSystem>();
-            SnakeSystem.SetElementType(SnakeElementSystem.SnakeElementType.Food);
+            SnakeSystem
+                .SetGameLevelElementSystem(this)
+                .SetGameLevelElementSystemGO(ref _baseLevelElementGameObject)
+                .SetElementType(SnakeElementSystem.SnakeElementType.Food);
 
             if (time > 0)
             {
@@ -295,7 +305,7 @@ public class GameLevelElementSystem : DissolvableObject
             _elementFood.Add(food);
         }
     }
-
+    // создает границу уровня по заданым координатам и времени появления
     private void BorderMaker(float x_position, float y_position, float time) 
     {
         GameObject border = Instantiate(_elementBorderPrefab, transform) as GameObject;
@@ -323,6 +333,38 @@ public class GameLevelElementSystem : DissolvableObject
         _elementBorders.Add(border);
     }
 
+    // удаляет элемент еды с уровня
+    public void DestroyFoodElement(float time, ref GameObject element)
+    {
+        float minTime = time * (1 - 0.1f);       // минимальное время в диапазоне time - 20%
+        float maxTime = time * (1 + 0.1f);       // максимальное время в диапазоне time + 20%
+
+        if (_elementFood.Count != 0 && _elementFood.Contains(element))
+        {
+            int index = 0;
+
+            for (int i = 0; i < _elementFood.Count; i++)
+            {
+                if (_elementFood[i] == element)
+                {
+                    index = i; break;
+                }
+            }
+
+            _elementFood[index].GetComponent<DissolvableObject>()
+                    .StartDissolving((float)(_random.NextDouble() * (maxTime - minTime) + minTime));
+            Destroy(element, (float)(_random.NextDouble() * (maxTime - minTime) + minTime));
+            _elementFood.Remove(element);
+        }
+        else
+        {
+            if (element == null)
+            {
+                Debug.Log("GameLevelElementSystem::DestroyFoodElement::element == null");
+            }
+        }
+    }
+    // просто уничтожает все элементы
     public void DestroyAllElements()
     {
         if (_elementBorders.Count != 0)
@@ -365,7 +407,7 @@ public class GameLevelElementSystem : DissolvableObject
             _elementFood.Clear();
         }
     }
-
+    // растворяет и уничтожает все элементы
     public void DissolveAndDestroy(float time)
     {
         float minTime = time * (1 - 0.2f);       // минимальное время в диапазоне time - 20%
