@@ -44,4 +44,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eadc057160737c5448421349e2fa4495, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _snakeUnitPrefab: {fileID: 5430267169939774665, guid: 1e5a40e1093686e49af8f979ee797f49, type: 3}
   _gameLevelElementPrefab: {fileID: 71699099258814151, guid: cea0bf5d4fa0763418863ffda0a3841c, type: 3}
+  _gameLevelMotionSpeed: 0.3
+  _gameBoxScaler: 4.5
+  _gameLevelGeneration: 0
+  _gameLevelElementsVisibleCount: 25
+  _gameLevelWidth: 6
+  _levelElementBoxMaxCount: 6
+  _levelElementBoxMinValue: 1
+  _levelElementBoxMaxValue: 22
+  ELEMENTS_SIZE: 0
+  DESSOLVED_SIZE: 0

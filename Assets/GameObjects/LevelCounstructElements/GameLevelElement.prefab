@@ -53,7 +53,8 @@ MonoBehaviour:
   _activationMode: 0
   _borderType: 3
   _elementSectorCount: 6
-  _elementBoxCout: 0
+  _elementBoxCount: 0
+  _elementFoodCount: 0
   _elementBoxScale: 1
   _elementBoxMinValue: 1
   _elementBoxMaxValue: 10

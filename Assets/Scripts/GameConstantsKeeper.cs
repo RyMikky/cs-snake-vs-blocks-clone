@@ -175,4 +175,70 @@ public class GameConstantsKeeper : MonoBehaviour
             return __BASIC_COLOR_PALETTE__[(BoxColorPalette)(score / 3)];
         }
     }
+
+    public struct GameLevelConfig
+    {
+        // ------------------------------ блок настроек уроовня ----------------------------
+
+        public int _gameLevelWidth { set; get; }                  // ширина уровня в плитках
+        public int _boxMaxCount { set; get; }                     // максимум ящиков на полоске элемента
+        public int _boxMinValue { set; get; }                     // минимальное значения ящика
+        public int _boxMaxValue { set; get; }                     // максимальное значение ящика
+
+        public int _lineVisible { set; get; }                     // количество отображаемых линий
+        public int _lineMaxCount { set; get; }                    // максимальное количество сгенерированных линий
+        public float _levelMinSpeed { set; get; }                 // минимальная допустимая скорость прокрутки уровня
+        public float _levelMaxSpeed { set; get; }                 // максимальная допустимая скорость прокрутки уровня
+        public float _LevelStartSpeed { set; get; }               // скорость с которой стартует уровень
+
+        // ------------------------------ блок настроек змеи -------------------------------
+
+        public int _snakeLinkVisible { set; get; }                // количество отображаемых звеньев змеи
+
+        // ------------------------------ блок настроек камеры -----------------------------
+
+        public float _minCameraDistance { set; get; }             // максимальное приближение камеры
+        public float _maxCameraDistance { set; get; }             // максимальное отдаление камеры
+
+        // ээээбанцуа инициализация.... как же тут не хватает удобных человечексих 
+        public GameLevelConfig(int gamelevelwidth, int boxmaxcount, int boxminvalue, int boxmaxvalue, int linevisible, 
+            int linemaxcount, float levelminspeed, float levelmaxspeed, float levelstartspeed, int snakelinkvisible, 
+            float mincameradistance, float maxcameradistance)
+        {
+            _gameLevelWidth = gamelevelwidth;
+            _boxMaxCount = boxmaxcount;
+            _boxMinValue = boxminvalue;
+            _boxMaxValue = boxmaxvalue;
+            _lineVisible = linevisible;
+            _lineMaxCount = linemaxcount;
+            _levelMinSpeed = levelminspeed;
+            _levelMaxSpeed = levelmaxspeed;
+            _LevelStartSpeed = levelstartspeed;
+            _snakeLinkVisible = snakelinkvisible;
+            _minCameraDistance = mincameradistance;
+            _maxCameraDistance = maxcameradistance;
+        }
+
+
+    }
+
+    public enum GameDifficulty
+    {
+        demo, easy, nomal, hard, insane
+    }
+
+    private static readonly Dictionary<GameDifficulty, GameLevelConfig> __GAME_DIFFICULTY__
+        = new Dictionary<GameDifficulty, GameLevelConfig>()
+        {
+            {GameDifficulty.demo, new GameLevelConfig(6, 3, 1, 6, 35, 150, 0.05f, 0.6f, 0.2f, 8, 50, 65) },
+            {GameDifficulty.easy, new GameLevelConfig(6, 4, 2, 8, 35, 150, 0.1f, 0.7f, 0.3f, 8, 50, 65) },
+            {GameDifficulty.nomal, new GameLevelConfig(6, 4, 3, 10, 35, 200, 0.2f, 0.8f, 0.4f, 10, 50, 70) },
+            {GameDifficulty.hard, new GameLevelConfig(6, 5, 4, 10, 35, 250, 0.3f, 0.9f, 0.5f, 10, 50, 70) },
+            {GameDifficulty.insane, new GameLevelConfig(6, 6, 6, 12, 35, 350, 0.4f, 1.0f, 0.6f, 12, 50, 75) }
+        };
+
+    public GameLevelConfig GetLevelConfiguration(GameDifficulty difficulty)
+    {
+        return __GAME_DIFFICULTY__[difficulty];
+    }
 }

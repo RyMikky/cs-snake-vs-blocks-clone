@@ -11,6 +11,11 @@ public class GameLevelSystem : MonoBehaviour
     public float _gameLevelMotionSpeed = 1.0f;                     // скорость перемещения элементов уровня
     public float _gameBoxScaler = 4.5f;                            // множитель масштаба блоков на уровне
 
+    public enum LevelType
+    {
+        infinity, limmit
+    }
+
     public enum LevelGenerator
     {
         procedure, from_catalog
@@ -18,6 +23,7 @@ public class GameLevelSystem : MonoBehaviour
 
     [Header("Блок настроек генерации уровня")]
     public LevelGenerator _gameLevelGeneration = LevelGenerator.procedure;
+    public LevelType _gameLevelType = LevelType.infinity;
     public int _gameLevelElementsVisibleCount = 25;                // количество видимых элементов уровня
     public int _gameLevelWidth = 6;                                // ширина игрового поля
 
