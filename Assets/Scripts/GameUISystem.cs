@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameUISystem : MonoBehaviour
 {
     public GameObject _menuScreen;
+    public GameObject _selectScreen;
     public GameObject _aboutScreen;
     public GameObject _bestScoreScreen;
     public GameObject _settingsScreen;
@@ -16,7 +17,7 @@ public class GameUISystem : MonoBehaviour
 
     public enum Mode
     {
-        menu, about, score, aqua, settings, game
+        menu, select, about, score, aqua, settings, game
     }
 
     public Mode _activeMode = Mode.menu;
@@ -41,6 +42,9 @@ public class GameUISystem : MonoBehaviour
         {
             case Mode.menu:
                 ActivateMenuScreen();
+                break;
+            case Mode.select:
+                ActivateSelectScreen();
                 break;
             case Mode.about:
                 ActivateAboutScreen();
@@ -75,10 +79,25 @@ public class GameUISystem : MonoBehaviour
         }
     }
 
+    public void ActivateSelectScreen()
+    {
+        _activeMode = Mode.select;
+        _menuScreen.SetActive(false);
+        _selectScreen.SetActive(true);
+        _aquaScreen.SetActive(false);
+        _bestScoreScreen.SetActive(false);
+        _settingsScreen.SetActive(false);
+        _aboutScreen.SetActive(false);
+
+        //_gameLevel.GetComponent<GameLevelEngine>().SetTowerRotation(false);
+        //_audioEngine.GetComponent<AudioEngine>().SetBackgroundVolume(0.8f);
+    }
+
     public void ActivateAboutScreen()
     {
         _activeMode = Mode.about;
         _menuScreen.SetActive(false);
+        _selectScreen.SetActive(false);
         _aquaScreen.SetActive(false);
         _bestScoreScreen.SetActive(false);
         _settingsScreen.SetActive(false);
@@ -92,6 +111,7 @@ public class GameUISystem : MonoBehaviour
     {
         _activeMode = Mode.settings;
         _menuScreen.SetActive(false);
+        _selectScreen.SetActive(false);
         _aquaScreen.SetActive(false);
         _bestScoreScreen.SetActive(false);
         _settingsScreen.SetActive(true);
@@ -105,6 +125,7 @@ public class GameUISystem : MonoBehaviour
     {
         _activeMode = Mode.score;
         _menuScreen.SetActive(false);
+        _selectScreen.SetActive(false);
         _aquaScreen.SetActive(false);
         _bestScoreScreen.SetActive(true);
         _settingsScreen.SetActive(false);
@@ -117,6 +138,7 @@ public class GameUISystem : MonoBehaviour
     public void ActivateMenuScreen()
     {
         _activeMode = Mode.menu;
+        _selectScreen.SetActive(false);
         _aboutScreen.SetActive(false);
         _aquaScreen.SetActive(false);
         _bestScoreScreen.SetActive(false);
@@ -130,6 +152,7 @@ public class GameUISystem : MonoBehaviour
     public void ActivateAquaScreen()
     {
         _activeMode = Mode.aqua;
+        _selectScreen.SetActive(false);
         _aboutScreen.SetActive(false);
         _aquaScreen.SetActive(true);
         _bestScoreScreen.SetActive(false);
@@ -143,6 +166,7 @@ public class GameUISystem : MonoBehaviour
     public void ActivateAquaLoseScreen()
     {
         _activeMode = Mode.aqua;
+        _selectScreen.SetActive(false);
         _aboutScreen.SetActive(false);
         _menuScreen.SetActive(false);
         _bestScoreScreen.SetActive(false);
@@ -157,6 +181,7 @@ public class GameUISystem : MonoBehaviour
     public void ActivateAquaWinScreen()
     {
         _activeMode = Mode.aqua;
+        _selectScreen.SetActive(false);
         _aboutScreen.SetActive(false);
         _menuScreen.SetActive(false);
         _bestScoreScreen.SetActive(false);
@@ -171,6 +196,7 @@ public class GameUISystem : MonoBehaviour
     public void CloseAllScreen()
     {
         _activeMode = Mode.game;
+        _selectScreen.SetActive(false);
         _aboutScreen.SetActive(false);
         _menuScreen.SetActive(false);
         _aquaScreen.SetActive(false);

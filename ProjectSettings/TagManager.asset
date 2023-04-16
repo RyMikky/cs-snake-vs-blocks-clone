@@ -11,6 +11,12 @@ TagManager:
   - SnakeHead
   - SnakeLink
   - SnakeFood
+  - SettingsScreen
+  - AboutScreen
+  - BestScoreScreen
+  - MenuScreen
+  - MenuUISystem
+  - SelectScreen
   layers:
   - Default
   - TransparentFX

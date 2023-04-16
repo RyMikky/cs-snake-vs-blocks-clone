@@ -24,14 +24,20 @@ public class GameLevelSystem : MonoBehaviour
     [Header("Блок настроек генерации уровня")]
     public LevelGenerator _gameLevelGeneration = LevelGenerator.procedure;
     public LevelType _gameLevelType = LevelType.infinity;
-    public int _gameLevelElementsVisibleCount = 25;                // количество видимых элементов уровня
+    
     public int _gameLevelWidth = 6;                                // ширина игрового поля
+    public int _lineBoxMaxCount = 6;                               // максимальное количество ящиков на элементе
 
-    public int _levelElementBoxMaxCount = 6;                       // максимальное количество ящиков на элементе
+    public int _lineBoxMinValue = 1;                               // минимальное значение для ящика
+    public int _lineBoxMaxValue = 10;                              // максимальное значение для ящика
 
-    public int _levelElementBoxMinValue = 1;                       // минимальное значение для ящика
-    public int _levelElementBoxMaxValue = 10;                      // максимальное значение для ящика
+    public int _lineVisibleCount = 25;                             // количество видимых элементов уровня
+    public int _lineMaxCount = 0;                                  // количество генерируемых линий
+    private int _lineCurrentCount = 0;                             // счетчик текущего количества элементов
 
+    public float _levelMinSpeed = 0.1f;                            // минимальная скорость прокрутки
+    public float _levelMaxSpeed = 1.0f;                            // максимальная скорость прокрутки
+    public float _levelStartSpeed = 0.4f;                          // стартовая скорость прокрутки
 
     public LinkedList<GameObject> _gameLevelElements = new LinkedList<GameObject>();
     public LinkedList<GameObject> _gameDissolvedElements = new LinkedList<GameObject>();
@@ -40,16 +46,63 @@ public class GameLevelSystem : MonoBehaviour
 
     public int ELEMENTS_SIZE = 0;
     public int DESSOLVED_SIZE = 0;
+    public int LINES_COUNTER = 0;
 
-    private void Awake()
+    // принимает параметры из переданной структуры
+    public GameLevelSystem SetLevelConfiguration(GameConstantsKeeper.GameLevelConfig config)
     {
-        _classRandomizer = new System.Random();
-        ConstructStartElements();
+        _gameLevelWidth = config._gameLevelWidth; _lineBoxMaxCount = config._boxMaxCount;
+        _lineBoxMinValue = config._boxMinValue; _lineBoxMaxValue = config._boxMaxValue;
+
+        _lineVisibleCount = config._lineVisible; _lineMaxCount = config._lineMaxCount;
+
+        // выставляем корректный флаг генерации количества эдементов
+        if (Mathf.Abs(_lineMaxCount) > 0)
+        {
+            _gameLevelType = LevelType.limmit;
+        }
+        else
+        {
+            _gameLevelType = LevelType.infinity;
+        }
+
+        _levelMinSpeed = config._levelMinSpeed; _levelMaxSpeed = config._levelMaxSpeed; 
+
+        _levelStartSpeed = config._LevelStartSpeed; _gameLevelMotionSpeed = _levelStartSpeed;
+
+        return this;
     }
-
-    void ConstructStartElements()
+    // запускает новый цикл уровня по переданным параметрам
+    public GameLevelSystem ConstructNewLevelSession(GameConstantsKeeper.GameLevelConfig config)
     {
-        for(int i = 0; i < _gameLevelElementsVisibleCount; i++)
+        SetLevelConfiguration(config).ConstructNewLevelSession();
+        return this;
+    }
+    // полное моментальное удаление всех элементов уровня
+    public GameLevelSystem DestroyGameLevel()
+    {
+        // удаляем элементы в связном списке активных элементов
+        while (_gameLevelElements.Count > 0)
+        {
+            Destroy(_gameLevelElements.First.Value);
+            _gameLevelElements.RemoveFirst();
+        }
+
+        // удаляем элементы в связном списке элементов и так помеченных на удаление
+        while (_gameDissolvedElements.Count > 0)
+        {
+            Destroy(_gameDissolvedElements.First.Value);
+            _gameDissolvedElements.RemoveFirst();
+        }
+
+        return this;
+    }
+    // запускает новый цикл уровня по имеющимся параметрам
+    public GameLevelSystem ConstructNewLevelSession()
+    {
+        DestroyGameLevel();            // для начала удаляем если что-то есть
+
+        for (int i = 0; i < _lineVisibleCount; i++)
         {
             GameObject element = Instantiate(_gameLevelElementPrefab, transform) as GameObject;
 
@@ -63,9 +116,48 @@ public class GameLevelSystem : MonoBehaviour
             elementSystem
                 .SetSectorCount(_gameLevelWidth)
                 .SetBoxScale(_gameBoxScaler)
-                .SetBoxMinValue(_levelElementBoxMinValue)
-                .SetBoxMaxValue(_levelElementBoxMaxValue)
-                .SetBoxCount(_classRandomizer.Next(0, (_classRandomizer.Next(0, Mathf.Min(_levelElementBoxMaxCount, _gameLevelWidth) + 1))))
+                .SetBoxMinValue(_lineBoxMinValue)
+                .SetBoxMaxValue(_lineBoxMaxValue)
+                .SetBoxCount(_classRandomizer.Next(0, (_classRandomizer.Next(0, Mathf.Min(_lineBoxMaxCount, _gameLevelWidth) + 1))))
+                .SetBorderType(GameLevelElementSystem.BorderType.Both);
+
+            elementSystem.GameLevelElementReconstruct();
+
+            _gameLevelElements.AddLast(element);
+        }
+
+        // сбрасываем счётчик построенных линий
+        _lineCurrentCount = 0;
+
+        return this;
+    }
+
+    private void Awake()
+    {
+        _classRandomizer = new System.Random();
+        ConstructNewLevelSession();
+        //ConstructStartElements();
+    }
+
+    void ConstructStartElements()
+    {
+        for (int i = 0; i < _lineVisibleCount; i++)
+        {
+            GameObject element = Instantiate(_gameLevelElementPrefab, transform) as GameObject;
+
+            Vector3 position = element.transform.position;
+
+            position.z = position.z - (_gameBoxScaler * i);
+            element.transform.position = position;
+
+            var elementSystem = element.GetComponent<GameLevelElementSystem>();
+
+            elementSystem
+                .SetSectorCount(_gameLevelWidth)
+                .SetBoxScale(_gameBoxScaler)
+                .SetBoxMinValue(_lineBoxMinValue)
+                .SetBoxMaxValue(_lineBoxMaxValue)
+                .SetBoxCount(_classRandomizer.Next(0, (_classRandomizer.Next(0, Mathf.Min(_lineBoxMaxCount, _gameLevelWidth) + 1))))
                 .SetBorderType(GameLevelElementSystem.BorderType.Both);
 
             elementSystem.GameLevelElementReconstruct();
@@ -79,9 +171,19 @@ public class GameLevelSystem : MonoBehaviour
         UpdateElementsPosition();                       // перемещение всех элементов уровня вперед согласно заданной скорости
         UpdateOutOfRangeElements();                     // удаление первого элемента списка вышедшего за область видимости
         UpdateElementsCount();                          // создание новых элементов уровня в конце списка при удалении с начала
+        UpdateGameLevelSpeed();                         // обновляет значения скорости прокрутки уровня, если разрешен и есть изменения
 
         DESSOLVED_SIZE = _gameDissolvedElements.Count;
         ELEMENTS_SIZE = _gameLevelElements.Count;
+
+        if (_gameLevelType == LevelType.limmit)
+        {
+            LINES_COUNTER = _lineCurrentCount;
+        }
+        else
+        {
+            LINES_COUNTER = 0;
+        }
     }
 
     // перемещение всех элементов уровня вперед согласно заданной скорости
@@ -129,7 +231,7 @@ public class GameLevelSystem : MonoBehaviour
     {
         Vector3 position = _gameLevelElements.First.Value.transform.position;
 
-        if (position.z > _gameLevelElementsVisibleCount + _gameBoxScaler)
+        if (position.z > _lineVisibleCount + _gameBoxScaler)
         {
             // вызываем удаление и растворение класса элемента уровня
             _gameLevelElements.First.Value.GetComponent<GameLevelElementSystem>().DissolveAndDestroy(1f);
@@ -144,7 +246,10 @@ public class GameLevelSystem : MonoBehaviour
     // создание новых элементов уровня в конце списка при удалении с начала
     void UpdateElementsCount()
     {
-        if (_gameLevelElements.Count < _gameLevelElementsVisibleCount)
+        // сложносоставное условие, если режим лимитный, но счётчик всё еще меньше максимума для уровня
+        // или режим безлимитный; и при этом количество элементов уровня меньше значения количества видимых элементов
+        if (((_gameLevelType == LevelType.limmit && _lineCurrentCount < _lineMaxCount) ||
+            _gameLevelType == LevelType.infinity) && _gameLevelElements.Count < _lineVisibleCount)
         {
             GameObject element = Instantiate(_gameLevelElementPrefab, transform) as GameObject;
 
@@ -158,18 +263,20 @@ public class GameLevelSystem : MonoBehaviour
             elementSystem
                 .SetSectorCount(_gameLevelWidth)
                 .SetBoxScale(_gameBoxScaler)
-                .SetBoxMinValue(_levelElementBoxMinValue)
-                .SetBoxMaxValue(_levelElementBoxMaxValue)
-                .SetBoxCount(_classRandomizer.Next(0, (_classRandomizer.Next(0, Mathf.Min(_levelElementBoxMaxCount, _gameLevelWidth) + 1))))
-                .SetFoodCount(_classRandomizer.Next(0, Mathf.Min(2, _gameLevelWidth - _levelElementBoxMaxCount) + 1))
+                .SetBoxMinValue(_lineBoxMinValue)
+                .SetBoxMaxValue(_lineBoxMaxValue)
+                .SetBoxCount(_classRandomizer.Next(0, (_classRandomizer.Next(0, Mathf.Min(_lineBoxMaxCount, _gameLevelWidth) + 1))))
+                .SetFoodCount(_classRandomizer.Next(0, Mathf.Min(2, _gameLevelWidth - _lineBoxMaxCount) + 1))
                 .SetBorderType(GameLevelElementSystem.BorderType.Both);
 
             elementSystem.SolveGameLevelElement(1);
 
             _gameLevelElements.AddLast(element);
+
+            // если лимитный режим, то инкремируем счётчик
+            if (_gameLevelType == LevelType.limmit) _lineCurrentCount++;
         }
     }
-
     public void MovingLevelDown(float range)
     {
         // метод перемещает все элементы уровня вперед согласно заданной скорости
@@ -191,27 +298,65 @@ public class GameLevelSystem : MonoBehaviour
         }
     }
 
+    // ---------------------- управление скоростью прокрутки уровня --------------------
+
+    private float _v;                                                 // значения со стрелок
+    private bool _accelerationEnable = true;                          // флаг взможности менять скрость
+
+    public bool GetAccelerationFlag()
+    {
+        return _accelerationEnable;
+    }
+    public GameLevelSystem SetAccelerationFlag(bool enable) { _accelerationEnable = enable; return this; }
+
+    // получение данных по горизонтали и вертикали со стрелок
+    void Inputs()
+    {
+        _v = Input.GetAxis("Vertical");
+    }
+    // обновляет значения скорости прокрутки уровня, если разрешен и есть изменения
+    void UpdateGameLevelSpeed()
+    {
+        if (_accelerationEnable)
+        {
+            Inputs();                              // считываем значение со стрелок
+
+            if (_v > 0)
+            {
+                IncreaseLevelSpeed(_v * 0.01f);             // увеличиваем скорость
+            }
+            else
+            {
+                DecreaseLevelSpeed(_v * 0.01f);             // замедляем скорость
+            }
+        }
+        
+    }
     public void IncreaseLevelSpeed(float value)
     {
-        if ((_gameLevelMotionSpeed + value) < 1.0f)
+        if ((_gameLevelMotionSpeed + value) < _levelMaxSpeed)
         {
             _gameLevelMotionSpeed += value;
         }
         else
         {
-            _gameLevelMotionSpeed = 1;
+            _gameLevelMotionSpeed = _levelMaxSpeed;
+        }
+    }
+    public void DecreaseLevelSpeed(float value)
+    {
+        if ((_gameLevelMotionSpeed + value) > _levelMinSpeed)
+        {
+            _gameLevelMotionSpeed += value;
+        }
+        else
+        {
+            _gameLevelMotionSpeed = _levelMinSpeed;
         }
     }
 
-    public void DecreaseLevelSpeed(float value)
-    {
-        if ((_gameLevelMotionSpeed + value) > 0.05f)
-        {
-            _gameLevelMotionSpeed += value;
-        }
-        else
-        {
-            _gameLevelMotionSpeed = 0.05f;
-        }
-    }
+    // обновляет скорость на изначальную
+    public GameLevelSystem SetDefaultGameSpeed() { _gameLevelMotionSpeed = _levelStartSpeed; return this; }
+    // назначает текущую скорость прокрутки уровня
+    public GameLevelSystem SetCurrenGameSpeed(float speed) { _gameLevelMotionSpeed = speed; return this; }
 }

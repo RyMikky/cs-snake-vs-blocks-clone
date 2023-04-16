@@ -29,26 +29,54 @@ public class GameKeeper : MonoBehaviour
 
         // активирует автоматический бекграундный уровень без змейки, который фоном будет бесконечно двигаться
         _gameLevel = Instantiate(_gameLevelPrefab, transform) as GameObject;
+        _gameLevel.GetComponent<GameLevelSystem>()
+            .ConstructNewLevelSession(
+                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.demo));
 
         // активирует основное меню и передаёт на него управление
         _gameUISystem.ActivateMenuScreen();
     }
 
-    
+    // -------------------------------------- блок конструкторов уровня ---------------------------------------
 
     // конструирует уровень легкой сложности с новой змейкой
-    void ConstructNewEasyLevel()
+    public void ConstructNewEasyLevel()
     {
         _gameSnake = Instantiate(_gameSnakePrefab, transform) as GameObject;
         ConstructEasyLevel();
     }
 
     // конструирует уровень легкой сложности со старой змейкой
-    void ConstructEasyLevel()
+    public void ConstructEasyLevel()
     {
-
+        _gameLevel.GetComponent<GameLevelSystem>()
+            .ConstructNewLevelSession(
+                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.easy));
     }
 
+    // конструирует уровень средней сложности со старой змейкой
+    public void ConstructNormalLevel()
+    {
+        _gameLevel.GetComponent<GameLevelSystem>()
+            .ConstructNewLevelSession(
+                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.normal));
+    }
+
+    // конструирует уровень высокой сложности со старой змейкой
+    public void ConstructHardLevel()
+    {
+        _gameLevel.GetComponent<GameLevelSystem>()
+            .ConstructNewLevelSession(
+                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.hard));
+    }
+
+    // конструирует уровень оч.выской сложности со старой змейкой
+    public void ConstructInsaneLevel()
+    {
+        _gameLevel.GetComponent<GameLevelSystem>()
+            .ConstructNewLevelSession(
+                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.insane));
+    }
 
 
 }

@@ -48,7 +48,7 @@ public class SnakeElementSystem : DissolvableObject
 
     // ------------------------ элементы для управления стрелками ---------
 
-    private float _h, _v;                            // значения со стрелок
+    private float _h;                                // значения со стрелок
 
     public float _maxHorizontalLevel = 1.0f;
 
@@ -286,7 +286,7 @@ public class SnakeElementSystem : DissolvableObject
     // получение данных по горизонтали и вертикали со стрелок
     void Inputs()
     {
-        _h = Input.GetAxis("Horizontal"); _v = Input.GetAxis("Vertical");
+        _h = Input.GetAxis("Horizontal");
     }
 
     [ExecuteInEditMode]
@@ -313,15 +313,6 @@ public class SnakeElementSystem : DissolvableObject
             }
 
             gameObject.transform.position = current_transform;
-
-            if (_v > 0)
-            {
-                _gameLevelSystem.IncreaseLevelSpeed(_v * 0.01f);
-            }
-            else
-            {
-                _gameLevelSystem.DecreaseLevelSpeed(_v * 0.01f);
-            }
         }
     }
 }
