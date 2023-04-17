@@ -10,6 +10,9 @@ public class SnakeGameUnitSystem : MonoBehaviour
     private GameKeeper _mainGameKeeper;         // базовая система управления игрой и игровыми состояниями
     public SnakeGameUnitSystem SetGameKeeper(GameKeeper keeper) { _mainGameKeeper = keeper; return this; }
 
+    private GameUISystem _gameUISystem;         // базовый UI-интерфейс, нужен, чтобы отображать количество экстра-жизней и очков
+    public SnakeGameUnitSystem SetGameUISystem(GameUISystem uISystem) { _gameUISystem = uISystem; return this; }
+
     // TODO Сюда необходимо добавить систему отображения очков и экстра жизней
 
     public enum SnakeUnitMode
@@ -43,7 +46,7 @@ public class SnakeGameUnitSystem : MonoBehaviour
     private GameObject _snakeGameUnit;                                               // текущий объект скрипта
     private System.Random _random = new System.Random();
 
-    private int _currentScore = 0;                                                   // счётчик очков на змейке
+    public int _currentScore = 0;                                                    // счётчик очков на змейке
     public int GetSnakeCurrentScore() { return _currentScore; }
     public SnakeGameUnitSystem SetSnakeCurrentScore(int score) { _currentScore = score; return this; }
     public SnakeGameUnitSystem ResetSnakeCurrentScore() { _currentScore = 0; return this; }
@@ -65,6 +68,8 @@ public class SnakeGameUnitSystem : MonoBehaviour
         // если передан флаг сброса, то записывается значение из конфига,
         // иначе останется текущим на момент записи параметров
         if (reset_extra_life) _snakeExtralife = config._snakeExtraLife;
+
+        _gameUISystem.SetExtraLifeCount(_snakeExtralife);             // обновляем количество экстра-жизней
 
         return this;
     }
@@ -261,8 +266,9 @@ public class SnakeGameUnitSystem : MonoBehaviour
             // если суммарное количество элементов 99 и следующее будет 100
             if (_snakeElements.Count + _invisibleLinks == 99)
             {
-                _invisibleLinks = 0;          // обнуляем "виртуальные" звенья
-                _snakeExtralife++;            // добавляем экстра жизнь
+                _invisibleLinks = 0;                                          // обнуляем "виртуальные" звенья
+                _snakeExtralife++;                                            // добавляем экстра жизнь
+                _gameUISystem.SetExtraLifeCount(_snakeExtralife);             // обновляем количество экстра-жизней
             }
             else
             {
@@ -270,8 +276,15 @@ public class SnakeGameUnitSystem : MonoBehaviour
             }
         }
 
-        // также обновляем очки за "поедание" - просто прибавляем скалер очков
+        // обновляем очки за "поедание" - просто прибавляем скалер очков
         _currentScore += _snakeScoreScaler;
+        
+        if (_gameUISystem != null)
+        {
+            // загружаем очки в соответствующее UI-поле
+            _gameUISystem.SetTextScore(_currentScore.ToString());
+        }
+        
 
         return this;
     }
@@ -308,6 +321,7 @@ public class SnakeGameUnitSystem : MonoBehaviour
             if (_snakeExtralife > 0)
             {
                 _snakeExtralife--;                                                        // отнимаем экстра жизнь
+                _gameUISystem.SetExtraLifeCount(_snakeExtralife);            // обновляем количество экстра-жизней
                 // реконструируем новую змейку с сохранением очков и текущими настройками триггеров и контроллеров
                 ConstructNewSnake(false, _currentTriggerEnable, _currentKeyboardEnable, _currentMouseEnable, true);
             }
@@ -315,6 +329,7 @@ public class SnakeGameUnitSystem : MonoBehaviour
             {
                 if (_mainGameKeeper != null)
                 {
+                    _gameUISystem.SetAllExtraLifeInactive();             // закрываем все экстра-жизни
                     _mainGameKeeper.GameOver(_currentScore);             // передаем киперу набранные очки
                     _currentScore = 0;                                   // сбрасываем набранные очки
                     DestroySnakeUnit();                                  // рессетим змейку

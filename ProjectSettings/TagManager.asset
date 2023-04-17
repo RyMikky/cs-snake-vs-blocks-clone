@@ -18,6 +18,11 @@ TagManager:
   - MenuUISystem
   - SelectScreen
   - StatsScreen
+  - FinishCollider
+  - WinnerScreen
+  - LoserScreen
+  - ScoreScreen
+  - ExtraScreen
   layers:
   - Default
   - TransparentFX

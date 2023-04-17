@@ -239,8 +239,10 @@ public class SnakeElementSystem : DissolvableObject
                     {
                         // как только пересекаем финиш, то блокируем скорость прокрутки
                         _gameLevelSystem
-                            .SetCurrenGameSpeed(0.2f)                // задаем скорость перемещения ленты
-                            .SetAccelerationFlag(false);             // фиксируем скорость перемещения ленты
+                            .SetGameSpeedSlideLevel(0.2f)            // задаём ожидаемую скорость движения уровня
+                            .SetGameSpeedSlideEnable(true);           // включаем плавное замедление
+                            //.SetCurrenGameSpeed(0.2f)                // задаем скорость перемещения ленты
+                            //.SetAccelerationFlag(false);             // фиксируем скорость перемещения ленты
 
                         _gameUnitSystem
                             .SetElementsTriggerEnable(false)         // выключаем обработку коллизий у всей змеи

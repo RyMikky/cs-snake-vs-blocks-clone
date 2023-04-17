@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 
 public class GameUISystem : MonoBehaviour
 {
+    [Header("Основные окна")]
     public GameObject _menuScreen;
     public GameObject _selectScreen;
     public GameObject _aboutScreen;
@@ -13,7 +15,53 @@ public class GameUISystem : MonoBehaviour
     public GameObject _winnerScreen;
     public GameObject _loserScreen;
 
-    public GameObject _gameLevel;
+    // ------------------------------- элементы окна с очками и уровнем -------------------
+    [Header("Окно очков")]
+    public GameObject _scoreScreen;
+    public TextMeshProUGUI _textLevel;
+    public GameUISystem SetTextLevel(string level) { _textLevel.text = level; return this; }
+    public TextMeshProUGUI _textScore;
+    public GameUISystem SetTextScore(string score) { _textScore.text = score; return this; }
+
+    // ------------------------------- элементы окна с экстра-жизнями ---------------------
+    [Header("Окно экстра-жизней")]
+    public GameObject _extraScreen;                  // объект окна с эекстра-жизнями
+    public GameObject[] _extraLifes;                 // заранее сформированный лист с отображениями
+    public Color _activeExtraLifeColor;              // цвет активной экстра-жизни
+    public Color _inactiveExtraLifeColor;            // цвет неактивной экстра-жизни
+    private int _currentActiveLives = 0;             // при создании скрипта нет активных экстра-жизней
+
+    // отображает требуемое количество экстра-жизней
+    public GameUISystem SetExtraLifeCount(int count)
+    {
+        if (_currentActiveLives != count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                _extraLifeColorSystem[i].SetMainColor(_activeExtraLifeColor);
+            }
+
+            for (int i = count; i < _extraLifeColorSystem.Count; i++)
+            {
+                _extraLifeColorSystem[i].SetMainColor(_inactiveExtraLifeColor);
+            }
+        }
+        return this;
+    }
+    // назначает все экстра-жизни неактивными
+    public GameUISystem SetAllExtraLifeInactive()
+    {
+        foreach(var item in _extraLifeColorSystem)
+        {
+            item.SetMainColor(_inactiveExtraLifeColor);
+        }
+        return this;
+    }
+
+    // лист с рендерами, который формируется при старте скрипта
+    public List<DissolvableObject> _extraLifeColorSystem = new List<DissolvableObject>();
+
+    [Header("Прочие элементы")]
     public GameObject _audioEngine;
 
     public enum Mode
@@ -21,21 +69,25 @@ public class GameUISystem : MonoBehaviour
         menu, select, about, score, settings, game, winner, loser
     }
 
-    public Mode _activeMode = Mode.menu;
+    public Mode _activeMode = Mode.game;
 
     public GameUISystem SetActiveMode(Mode mode) { _activeMode = mode; return this; }
     public GameUISystem.Mode GetActiveMode() { return _activeMode; }
 
-    private Mode _archiveMode = Mode.game;
+    private Mode _archiveMode = Mode.menu;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
+    {
+        for (int i = 0; i < _extraLifes.Length; i++)
+        {
+            _extraLifeColorSystem.Add(_extraLifes[i].GetComponent<DissolvableObject>().SetMainColor(_inactiveExtraLifeColor));
+        }
+    }
+    private void Start()
     {
         _activeMode = Mode.menu;
     }
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         EnterMainMenu();
 
@@ -75,6 +127,7 @@ public class GameUISystem : MonoBehaviour
         }
     }
 
+    // активация главного меню по нажатию кнопки 'Esc'
     public void EnterMainMenu()
     {
         if (Input.GetButtonUp("Cancel"))
@@ -219,7 +272,7 @@ public class GameUISystem : MonoBehaviour
             _bestScoreScreen.SetActive(false);
             _settingsScreen.SetActive(false);
             _winnerScreen.SetActive(false);
-            _loserScreen.SetActive(true);
+            _loserScreen.SetActive(false);
         }
     }
 
@@ -233,12 +286,5 @@ public class GameUISystem : MonoBehaviour
 
         Application.Quit();
     }
-    public void StartNewGame()
-    {
-        //GetComponentInParent<GameEngine>().ConstructNewGameLevel();
-    }
-    public void StartNextGame()
-    {
-        //GetComponentInParent<GameEngine>().ConstructNextGameLevel();
-    }
+
 }

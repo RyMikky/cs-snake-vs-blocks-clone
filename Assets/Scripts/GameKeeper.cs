@@ -45,11 +45,12 @@ public class GameKeeper : MonoBehaviour
         _gameSnake.transform.localPosition = new Vector3(0, 2.75f, 10);
         _snakeGameUnitSystem = _gameSnake.GetComponent<SnakeGameUnitSystem>();
 
-        _snakeGameUnitSystem.SetGameKeeper(this).ConstructNewSnake(
+        _snakeGameUnitSystem.SetGameKeeper(this).SetGameUISystem(_gameUISystem).ConstructNewSnake(
                 _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.demo),
                 true, true, false, true, false, true);
 
         // активирует основное меню и передаёт на него управление
+        
         _gameUISystem.ActivateMenuScreen();
     }
 
@@ -68,6 +69,10 @@ public class GameKeeper : MonoBehaviour
         _gameLevel.GetComponent<GameLevelSystem>()
             .ConstructNewLevelSession(
                 _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.easy));
+
+        _snakeGameUnitSystem.ConstructNewSnake(
+                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.easy),
+                false, false, true, true, false, true);
     }
 
     // конструирует уровень средней сложности со старой змейкой
@@ -76,6 +81,10 @@ public class GameKeeper : MonoBehaviour
         _gameLevel.GetComponent<GameLevelSystem>()
             .ConstructNewLevelSession(
                 _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.normal));
+
+        _snakeGameUnitSystem.ConstructNewSnake(
+                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.normal),
+                false, false, true, true, false, true);
     }
 
     // конструирует уровень высокой сложности со старой змейкой
@@ -84,6 +93,10 @@ public class GameKeeper : MonoBehaviour
         _gameLevel.GetComponent<GameLevelSystem>()
             .ConstructNewLevelSession(
                 _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.hard));
+
+        _snakeGameUnitSystem.ConstructNewSnake(
+                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.hard),
+                false, false, true, true, false, true);
     }
 
     // конструирует уровень оч.высокой сложности со старой змейкой
@@ -92,6 +105,10 @@ public class GameKeeper : MonoBehaviour
         _gameLevel.GetComponent<GameLevelSystem>()
             .ConstructNewLevelSession(
                 _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.insane));
+
+        _snakeGameUnitSystem.ConstructNewSnake(
+                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.insane),
+                false, false, true, true, false, true);
     }
 
     // -------------------------------------- блок игровых состояний ------------------------------------------
@@ -99,11 +116,12 @@ public class GameKeeper : MonoBehaviour
     // функция вызывающая состояние проигрыша
     public void GameOver(int score)
     {
-
+        
+        _gameUISystem.ActivateLoserScreen();                                     // активируем экран поражения
     }
 
     public void LevelComplette(int score, int extraLifes)
     {
-
+        _gameUISystem.ActivateWinnerScreen();                                    // активируем экран победы
     }
 }

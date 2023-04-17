@@ -105,6 +105,7 @@ public class GameLevelSystem : MonoBehaviour
     public GameLevelSystem ConstructNewLevelSession()
     {
         DestroyGameLevel();            // для начала удаляем если что-то есть
+        SetAccelerationFlag(true);     // включаем управление обычной скоростью
 
         for (int i = 0; i < _lineVisibleCount; i++)
         {
@@ -139,8 +140,7 @@ public class GameLevelSystem : MonoBehaviour
     private void Awake()
     {
         _classRandomizer = new System.Random();
-        ConstructNewLevelSession();
-        //ConstructStartElements();
+        ConstructNewLevelSession();;
     }
 
     void ConstructStartElements()
@@ -335,11 +335,18 @@ public class GameLevelSystem : MonoBehaviour
     private float _v;                                                 // значения со стрелок
     private bool _accelerationEnable = true;                          // флаг взможности менять скрость
 
+    private bool _gameSpeedSlideEnable = false;                       // флаг включения "скольжения" скорости к заданому параметру
+    private float _gameSpeedSlideLevel = 0.2f;                        // требуемая скорость движения ленты
+
+
+    public GameLevelSystem SetGameSpeedSlideEnable(bool enable) { _gameSpeedSlideEnable = enable; _accelerationEnable = !enable; return this; }
+    public GameLevelSystem SetGameSpeedSlideLevel(float level) { _gameSpeedSlideLevel = level; return this; }
+
     public bool GetAccelerationFlag()
     {
         return _accelerationEnable;
     }
-    public GameLevelSystem SetAccelerationFlag(bool enable) { _accelerationEnable = enable; return this; }
+    public GameLevelSystem SetAccelerationFlag(bool enable) { _accelerationEnable = enable; _gameSpeedSlideEnable = !enable; return this; }
 
     // получение данных по горизонтали и вертикали со стрелок
     void Inputs()
@@ -360,6 +367,24 @@ public class GameLevelSystem : MonoBehaviour
             else
             {
                 DecreaseLevelSpeed(_v * 0.01f);             // замедляем скорость
+            }
+        }
+
+        if (_gameSpeedSlideEnable && _gameLevelMotionSpeed != _gameSpeedSlideLevel)
+        {
+            if (_gameLevelMotionSpeed > _gameSpeedSlideLevel &&
+                Mathf.Abs(_gameLevelMotionSpeed) - Mathf.Abs(_gameSpeedSlideLevel) > 0.02f)
+            {
+                _gameLevelMotionSpeed -= 0.005f;
+            }
+            else if (_gameLevelMotionSpeed < _gameSpeedSlideLevel &&
+                Mathf.Abs(_gameSpeedSlideLevel) - Mathf.Abs(_gameLevelMotionSpeed) > 0.02f)
+            {
+                _gameLevelMotionSpeed += 0.005f;
+            }
+            else
+            {
+                _gameLevelMotionSpeed = _gameSpeedSlideLevel;
             }
         }
         
