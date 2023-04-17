@@ -30,7 +30,7 @@ public class GameKeeper : MonoBehaviour
         _gameUISystem = _gameMenu.GetComponent<GameUISystem>();
         _gameSoundSystem = _gameSound.GetComponent<GameSoundSystem>();
 
-        // активирует автоматический бекграундный уровень без змейки, который фоном будет бесконечно двигаться
+        // активирует автоматический бекграундный уровень, который фоном будет бесконечно двигаться
         _gameLevel = Instantiate(_gameLevelPrefab, transform) as GameObject;
         _gameLevelSystem = _gameLevel.GetComponent<GameLevelSystem>();
 
@@ -50,78 +50,184 @@ public class GameKeeper : MonoBehaviour
                 true, true, false, true, false, true);
 
         // активирует основное меню и передаёт на него управление
-        
         _gameUISystem.ActivateMenuScreen();
     }
+
+    
+    private GameConstantsKeeper.GameDifficulty _currentDifficulty;      // поле для отслеживания текущего уровня сложности игры
+    private int _lastGameScore;                                         // поле сохранения последнего количества очков
+    private int _lastExtraLife;                                         // поле сохранения последнего количества экстра-жизней
 
     // -------------------------------------- блок конструкторов уровня ---------------------------------------
 
     // конструирует уровень легкой сложности с новой змейкой
     public void ConstructNewEasyLevel()
     {
-        _gameSnake = Instantiate(_gameSnakePrefab, transform) as GameObject;
-        ConstructEasyLevel();
-    }
+        _lastGameScore = 0;
+        _lastExtraLife = _gameConstantsKeeper
+            .GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.easy)._snakeExtraLife;
 
-    // конструирует уровень легкой сложности со старой змейкой
-    public void ConstructEasyLevel()
+        ConstructEasyLevel(true, true);
+    }
+    // конструирует уровень легкой сложности с заданными параметрами змейки
+    public void ConstructEasyLevel(bool reset_extra_life, bool reset_score)
     {
+        _currentDifficulty = GameConstantsKeeper.GameDifficulty.easy;     // сохраняем сложность
+
         _gameLevel.GetComponent<GameLevelSystem>()
             .ConstructNewLevelSession(
-                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.easy));
+                _gameConstantsKeeper.GetLevelConfiguration(_currentDifficulty));
 
-        _snakeGameUnitSystem.ConstructNewSnake(
-                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.easy),
-                false, false, true, true, false, true);
+        _snakeGameUnitSystem.SetGameUISystem(_gameUISystem).ConstructNewSnake(
+                _gameConstantsKeeper.GetLevelConfiguration(_currentDifficulty),
+                reset_extra_life, reset_score, true, true, false, true);
+
+        _currentDifficulty = GameConstantsKeeper.GameDifficulty.easy;     // сохраняем сложность
+
+        _gameUISystem.SetTextLevel("Легкий").ActivateGameMode();          // перевод UI в режим отображения игровых данных
     }
 
+
+    // конструирует уровень cредней сложности с новой змейкой
+    public void ConstructNewNormalLevel()
+    {
+        _lastGameScore = 0;
+        _lastExtraLife = _gameConstantsKeeper
+            .GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.normal)._snakeExtraLife;
+
+        ConstructNormalLevel(true, true);
+    }
     // конструирует уровень средней сложности со старой змейкой
-    public void ConstructNormalLevel()
+    public void ConstructNormalLevel(bool reset_extra_life, bool reset_score)
     {
+        _currentDifficulty = GameConstantsKeeper.GameDifficulty.normal;     // сохраняем сложность
+
         _gameLevel.GetComponent<GameLevelSystem>()
             .ConstructNewLevelSession(
-                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.normal));
+                _gameConstantsKeeper.GetLevelConfiguration(_currentDifficulty));
 
-        _snakeGameUnitSystem.ConstructNewSnake(
-                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.normal),
-                false, false, true, true, false, true);
+        _snakeGameUnitSystem.SetGameUISystem(_gameUISystem).ConstructNewSnake(
+                _gameConstantsKeeper.GetLevelConfiguration(_currentDifficulty),
+                reset_extra_life, reset_score, true, true, false, true);
+
+        _gameUISystem.SetTextLevel("Cредний").ActivateGameMode();           // перевод UI в режим отображения игровых данных
     }
 
+
+    // конструирует уровень высокой сложности с новой змейкой
+    public void ConstructNewHardLevel()
+    {
+        _lastGameScore = 0;
+        _lastExtraLife = _gameConstantsKeeper
+            .GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.hard)._snakeExtraLife;
+
+        ConstructHardLevel(true, true);
+    }
     // конструирует уровень высокой сложности со старой змейкой
-    public void ConstructHardLevel()
+    public void ConstructHardLevel(bool reset_extra_life, bool reset_score)
     {
+        _currentDifficulty = GameConstantsKeeper.GameDifficulty.hard;     // сохраняем сложность
+
         _gameLevel.GetComponent<GameLevelSystem>()
             .ConstructNewLevelSession(
-                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.hard));
+                _gameConstantsKeeper.GetLevelConfiguration(_currentDifficulty));
 
-        _snakeGameUnitSystem.ConstructNewSnake(
-                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.hard),
-                false, false, true, true, false, true);
+        _snakeGameUnitSystem.SetGameUISystem(_gameUISystem).ConstructNewSnake(
+                _gameConstantsKeeper.GetLevelConfiguration(_currentDifficulty),
+                reset_extra_life, reset_score, true, true, false, true);
+
+        _gameUISystem.SetTextLevel("Cложный").ActivateGameMode();          // перевод UI в режим отображения игровых данных
     }
 
-    // конструирует уровень оч.высокой сложности со старой змейкой
-    public void ConstructInsaneLevel()
+
+    // конструирует уровень оч.высокой сложности с новой змейкой
+    public void ConstructNewInsaneLevel()
     {
+        _lastGameScore = 0;
+        _lastExtraLife = _gameConstantsKeeper
+            .GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.insane)._snakeExtraLife;
+
+        ConstructInsaneLevel(true, true);
+    }
+    // конструирует уровень оч.высокой сложности с новой змейкой
+    public void ConstructInsaneLevel(bool reset_extra_life, bool reset_score)
+    {
+        _currentDifficulty = GameConstantsKeeper.GameDifficulty.insane;     // сохраняем сложность
+
         _gameLevel.GetComponent<GameLevelSystem>()
             .ConstructNewLevelSession(
-                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.insane));
+                _gameConstantsKeeper.GetLevelConfiguration(_currentDifficulty));
 
-        _snakeGameUnitSystem.ConstructNewSnake(
-                _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.insane),
-                false, false, true, true, false, true);
+        _snakeGameUnitSystem.SetGameUISystem(_gameUISystem).ConstructNewSnake(
+                _gameConstantsKeeper.GetLevelConfiguration(_currentDifficulty),
+               reset_extra_life, reset_score, true, true, false, true);
+
+        _gameUISystem.SetTextLevel("Адочек!").ActivateGameMode();            // перевод UI в режим отображения игровых данных
     }
+
 
     // -------------------------------------- блок игровых состояний ------------------------------------------
+
+    // конструирует следующий уровень сложности при прохождении предыдущего
+    public void PlayNextDifficulty()
+    {
+        switch (_currentDifficulty)
+        {
+            case GameConstantsKeeper.GameDifficulty.easy:
+                ConstructNormalLevel(false, false);
+                break;
+
+            case GameConstantsKeeper.GameDifficulty.normal:
+                ConstructHardLevel(false, false);
+                break;
+
+            case GameConstantsKeeper.GameDifficulty.hard:
+                ConstructInsaneLevel(false, false);
+                break;
+
+            case GameConstantsKeeper.GameDifficulty.insane:
+
+                // TODO сделать обработку случая когда пройдены все уровни
+
+                break;
+        }
+    }
+    // создаёт новый уровень с последними сохраненными параметрами змейки по очкам и экстра жизням
+    public void RestartLastDifficulty()
+    {
+        switch (_currentDifficulty)
+        {
+            case GameConstantsKeeper.GameDifficulty.easy:
+                ConstructEasyLevel(false, false);
+                _snakeGameUnitSystem.SetSnakeExtraLife(_lastExtraLife).SetSnakeCurrentScore(_lastGameScore);
+                break;
+
+            case GameConstantsKeeper.GameDifficulty.normal:
+                ConstructNormalLevel(false, false);
+                _snakeGameUnitSystem.SetSnakeExtraLife(_lastExtraLife).SetSnakeCurrentScore(_lastGameScore);
+                break;
+
+            case GameConstantsKeeper.GameDifficulty.hard:
+                ConstructHardLevel(false, false);
+                _snakeGameUnitSystem.SetSnakeExtraLife(_lastExtraLife).SetSnakeCurrentScore(_lastGameScore);
+                break;
+
+            case GameConstantsKeeper.GameDifficulty.insane:
+                ConstructInsaneLevel(false, false);
+                _snakeGameUnitSystem.SetSnakeExtraLife(_lastExtraLife).SetSnakeCurrentScore(_lastGameScore);
+                break;
+        }
+    }
 
     // функция вызывающая состояние проигрыша
     public void GameOver(int score)
     {
-        
         _gameUISystem.ActivateLoserScreen();                                     // активируем экран поражения
     }
-
+    // вызывает состояние победы
     public void LevelComplette(int score, int extraLifes)
     {
+        _lastGameScore = score; _lastExtraLife = extraLifes;                     // сохраняет очки и жизни
         _gameUISystem.ActivateWinnerScreen();                                    // активируем экран победы
     }
 }

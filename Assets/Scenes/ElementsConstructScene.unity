@@ -361,6 +361,7 @@ GameObject:
   - component: {fileID: 105688429}
   - component: {fileID: 105688431}
   - component: {fileID: 105688430}
+  - component: {fileID: 105688432}
   m_Layer: 0
   m_Name: SnakeElement (3)
   m_TagString: Untagged
@@ -433,6 +434,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 105688428}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &105688432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 105688428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26208ec0542780a4297d4d56140ec536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dissolveDuration: 1
+  solveDuration: 1
 --- !u!1 &212904453
 GameObject:
   m_ObjectHideFlags: 0
@@ -516,8 +531,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MenuUIEngine, Assembly-CSharp
+      - m_Target: {fileID: 1372222299}
+        m_TargetAssemblyTypeName: GameUISystem, Assembly-CSharp
         m_MethodName: ActivateMenuScreen
         m_Mode: 1
         m_Arguments:
@@ -528,8 +543,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: AudioEngine, Assembly-CSharp
+      - m_Target: {fileID: 364558180}
+        m_TargetAssemblyTypeName: GameSoundSystem, Assembly-CSharp
         m_MethodName: PlayClick
         m_Mode: 1
         m_Arguments:
@@ -589,6 +604,7 @@ GameObject:
   - component: {fileID: 231216979}
   - component: {fileID: 231216981}
   - component: {fileID: 231216980}
+  - component: {fileID: 231216982}
   m_Layer: 0
   m_Name: SnakeElement (1)
   m_TagString: Untagged
@@ -661,6 +677,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 231216978}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &231216982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 231216978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26208ec0542780a4297d4d56140ec536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dissolveDuration: 1
+  solveDuration: 1
 --- !u!1 &257346377
 GameObject:
   m_ObjectHideFlags: 0
@@ -1563,7 +1593,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1423737498}
         m_TargetAssemblyTypeName: GameKeeper, Assembly-CSharp
-        m_MethodName: ConstructNormalLevel
+        m_MethodName: ConstructNewNormalLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1841,7 +1871,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 439461952}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1423737498}
+        m_TargetAssemblyTypeName: GameKeeper, Assembly-CSharp
+        m_MethodName: RestartLastDifficulty
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 364558180}
+        m_TargetAssemblyTypeName: GameSoundSystem, Assembly-CSharp
+        m_MethodName: PlayClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &439461952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2295,9 +2349,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MenuUIEngine, Assembly-CSharp
-        m_MethodName: CloseAllScreen
+      - m_Target: {fileID: 1423737498}
+        m_TargetAssemblyTypeName: GameKeeper, Assembly-CSharp
+        m_MethodName: PlayNextDifficulty
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2307,20 +2361,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MenuUIEngine, Assembly-CSharp
-        m_MethodName: StartNextGame
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: AudioEngine, Assembly-CSharp
+      - m_Target: {fileID: 364558180}
+        m_TargetAssemblyTypeName: GameSoundSystem, Assembly-CSharp
         m_MethodName: PlayClick
         m_Mode: 1
         m_Arguments:
@@ -2507,7 +2549,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1423737498}
         m_TargetAssemblyTypeName: GameKeeper, Assembly-CSharp
-        m_MethodName: ConstructHardLevel
+        m_MethodName: ConstructNewHardLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3200,6 +3242,7 @@ GameObject:
   - component: {fileID: 803140128}
   - component: {fileID: 803140130}
   - component: {fileID: 803140129}
+  - component: {fileID: 803140131}
   m_Layer: 0
   m_Name: SnakeElement (2)
   m_TagString: Untagged
@@ -3272,6 +3315,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 803140127}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &803140131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 803140127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26208ec0542780a4297d4d56140ec536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dissolveDuration: 1
+  solveDuration: 1
 --- !u!1001 &847597220
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3368,6 +3425,7 @@ GameObject:
   - component: {fileID: 864013033}
   - component: {fileID: 864013035}
   - component: {fileID: 864013034}
+  - component: {fileID: 864013036}
   m_Layer: 0
   m_Name: SnakeElement
   m_TagString: Untagged
@@ -3440,6 +3498,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 864013032}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &864013036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 864013032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26208ec0542780a4297d4d56140ec536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dissolveDuration: 1
+  solveDuration: 1
 --- !u!1 &870350986
 GameObject:
   m_ObjectHideFlags: 0
@@ -3661,6 +3733,7 @@ GameObject:
   - component: {fileID: 968349253}
   - component: {fileID: 968349255}
   - component: {fileID: 968349254}
+  - component: {fileID: 968349256}
   m_Layer: 0
   m_Name: SnakeElement (2)
   m_TagString: Untagged
@@ -3733,6 +3806,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 968349252}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &968349256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968349252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26208ec0542780a4297d4d56140ec536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dissolveDuration: 1
+  solveDuration: 1
 --- !u!1 &1066086737
 GameObject:
   m_ObjectHideFlags: 0
@@ -3791,8 +3878,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u041F\u043E\u0437\u0434\u0440\u0430\u0432\u043B\u044F\u044E \u0441 \u043F\u0440\u043E\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435\u043C!\n\u0414\u0430\u043B\u044C\u0448\u0435
-    \u0441\u043C\u043E\u0436\u0435\u0448\u044C? "
+  m_text: "\u041F\u0440\u0438\u0434\u0435\u0442\u0441\u044F \u043F\u0435\u0440\u0435\u0438\u0433\u0440\u0430\u0442\u044C,
+    \u0445\u0435-\u0445\u0435)\n\u041D\u0443... \u0438\u043B\u0438 \u043C\u043E\u0436\u0435\u0448\u044C
+    \u0432\u044B\u0439\u0442\u0438 \u0432 \u043C\u0435\u043D\u044E, \u043D\u043E
+    \u0442\u043E\u0433\u0434\u0430 \u043E\u0447\u043A\u0438 \u0441\u0433\u043E\u0440\u044F\u0442
+    ^_^"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4102,7 +4192,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1423737498}
         m_TargetAssemblyTypeName: GameKeeper, Assembly-CSharp
-        m_MethodName: ConstructInsaneLevel
+        m_MethodName: ConstructNewInsaneLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4173,6 +4263,7 @@ GameObject:
   - component: {fileID: 1189578556}
   - component: {fileID: 1189578558}
   - component: {fileID: 1189578557}
+  - component: {fileID: 1189578559}
   m_Layer: 0
   m_Name: SnakeElement
   m_TagString: Untagged
@@ -4245,6 +4336,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1189578555}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1189578559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1189578555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26208ec0542780a4297d4d56140ec536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dissolveDuration: 1
+  solveDuration: 1
 --- !u!1 &1219437794
 GameObject:
   m_ObjectHideFlags: 0
@@ -4669,7 +4774,7 @@ MonoBehaviour:
   _winnerScreen: {fileID: 870350986}
   _loserScreen: {fileID: 98015244}
   _scoreScreen: {fileID: 1725874039}
-  _textLevel: {fileID: 1120955198}
+  _textLevel: {fileID: 1574051657}
   _textScore: {fileID: 1393647889}
   _extraScreen: {fileID: 2093771315}
   _extraLifes:
@@ -4685,10 +4790,12 @@ MonoBehaviour:
   - {fileID: 1805396459}
   - {fileID: 803140127}
   - {fileID: 105688428}
-  _inactiveExtraLifeColor: {r: 0.122641504, g: 0.09829639, b: 0.06421324, a: 0}
-  _extraLifeRenderers: []
+  _activeExtraLifeColor: {r: 0.94509804, g: 0.7529412, b: 0, a: 0}
+  _inactiveExtraLifeColor: {r: 0.3773585, g: 0.30638847, b: 0.19401923, a: 0}
+  _extraLifeColorSystem: []
   _audioEngine: {fileID: 364558175}
   _activeMode: 5
+  _archiveMode: 0
 --- !u!114 &1372222300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4998,7 +5105,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1423737498}
         m_TargetAssemblyTypeName: GameKeeper, Assembly-CSharp
-        m_MethodName: ConstructEasyLevel
+        m_MethodName: ConstructNewEasyLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5537,8 +5644,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MenuUIEngine, Assembly-CSharp
+      - m_Target: {fileID: 1372222299}
+        m_TargetAssemblyTypeName: GameUISystem, Assembly-CSharp
         m_MethodName: ActivateMenuScreen
         m_Mode: 1
         m_Arguments:
@@ -5549,8 +5656,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: AudioEngine, Assembly-CSharp
+      - m_Target: {fileID: 364558180}
+        m_TargetAssemblyTypeName: GameSoundSystem, Assembly-CSharp
         m_MethodName: PlayClick
         m_Mode: 1
         m_Arguments:
@@ -5619,7 +5726,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1725874040
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5791,6 +5898,7 @@ GameObject:
   - component: {fileID: 1805396460}
   - component: {fileID: 1805396462}
   - component: {fileID: 1805396461}
+  - component: {fileID: 1805396463}
   m_Layer: 0
   m_Name: SnakeElement (1)
   m_TagString: Untagged
@@ -5863,6 +5971,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1805396459}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1805396463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1805396459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26208ec0542780a4297d4d56140ec536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dissolveDuration: 1
+  solveDuration: 1
 --- !u!1 &1819000348
 GameObject:
   m_ObjectHideFlags: 0
@@ -6089,6 +6211,7 @@ GameObject:
   - component: {fileID: 1946692881}
   - component: {fileID: 1946692883}
   - component: {fileID: 1946692882}
+  - component: {fileID: 1946692884}
   m_Layer: 0
   m_Name: SnakeElement (3)
   m_TagString: Untagged
@@ -6161,6 +6284,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1946692880}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1946692884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1946692880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26208ec0542780a4297d4d56140ec536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dissolveDuration: 1
+  solveDuration: 1
 --- !u!1 &1959944976
 GameObject:
   m_ObjectHideFlags: 0
@@ -6172,6 +6309,7 @@ GameObject:
   - component: {fileID: 1959944977}
   - component: {fileID: 1959944979}
   - component: {fileID: 1959944978}
+  - component: {fileID: 1959944980}
   m_Layer: 0
   m_Name: SnakeElement (1)
   m_TagString: Untagged
@@ -6244,6 +6382,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1959944976}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1959944980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959944976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26208ec0542780a4297d4d56140ec536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dissolveDuration: 1
+  solveDuration: 1
 --- !u!1 &1970854033
 GameObject:
   m_ObjectHideFlags: 0
@@ -6472,7 +6624,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1991990876}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1423737498}
+        m_TargetAssemblyTypeName: GameKeeper, Assembly-CSharp
+        m_MethodName: RestartLastDifficulty
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 364558180}
+        m_TargetAssemblyTypeName: GameSoundSystem, Assembly-CSharp
+        m_MethodName: PlayClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1991990876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6659,6 +6835,7 @@ GameObject:
   - component: {fileID: 2011994316}
   - component: {fileID: 2011994318}
   - component: {fileID: 2011994317}
+  - component: {fileID: 2011994319}
   m_Layer: 0
   m_Name: SnakeElement (2)
   m_TagString: Untagged
@@ -6731,6 +6908,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2011994315}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2011994319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2011994315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26208ec0542780a4297d4d56140ec536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dissolveDuration: 1
+  solveDuration: 1
 --- !u!1 &2060578491
 GameObject:
   m_ObjectHideFlags: 0
@@ -6828,7 +7019,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2093771316
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6960,6 +7151,7 @@ GameObject:
   - component: {fileID: 2100639224}
   - component: {fileID: 2100639226}
   - component: {fileID: 2100639225}
+  - component: {fileID: 2100639227}
   m_Layer: 0
   m_Name: SnakeElement (3)
   m_TagString: Untagged
@@ -7032,6 +7224,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2100639223}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2100639227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100639223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26208ec0542780a4297d4d56140ec536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dissolveDuration: 1
+  solveDuration: 1
 --- !u!33 &4258330261886748335
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -12650,6 +12856,7 @@ GameObject:
   - component: {fileID: 5515200982160159941}
   - component: {fileID: 4258330261886748335}
   - component: {fileID: 8168682164369230950}
+  - component: {fileID: 8321857935111935219}
   m_Layer: 0
   m_Name: SnakeElement
   m_TagString: Untagged
@@ -12657,3 +12864,17 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8321857935111935219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8321857935111935218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26208ec0542780a4297d4d56140ec536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dissolveDuration: 1
+  solveDuration: 1

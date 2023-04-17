@@ -29,21 +29,28 @@ public class GameUISystem : MonoBehaviour
     public GameObject[] _extraLifes;                 // заранее сформированный лист с отображениями
     public Color _activeExtraLifeColor;              // цвет активной экстра-жизни
     public Color _inactiveExtraLifeColor;            // цвет неактивной экстра-жизни
-    private int _currentActiveLives = 0;             // при создании скрипта нет активных экстра-жизней
+    private int _currentActiveLives = -1;             // при создании скрипта нет активных экстра-жизней
 
     // отображает требуемое количество экстра-жизней
     public GameUISystem SetExtraLifeCount(int count)
     {
         if (_currentActiveLives != count)
         {
-            for (int i = 0; i < count; i++)
+            if (count == 0)
             {
-                _extraLifeColorSystem[i].SetMainColor(_activeExtraLifeColor);
+                SetAllExtraLifeInactive();
             }
-
-            for (int i = count; i < _extraLifeColorSystem.Count; i++)
+            else
             {
-                _extraLifeColorSystem[i].SetMainColor(_inactiveExtraLifeColor);
+                for (int i = 0; i < count; i++)
+                {
+                    _extraLifeColorSystem[i].SetMainColor(_activeExtraLifeColor);
+                }
+
+                for (int i = count; i < _extraLifeColorSystem.Count; i++)
+                {
+                    _extraLifeColorSystem[i].SetMainColor(_inactiveExtraLifeColor);
+                }
             }
         }
         return this;
@@ -66,15 +73,15 @@ public class GameUISystem : MonoBehaviour
 
     public enum Mode
     {
-        menu, select, about, score, settings, game, winner, loser
+        menu, select, about, score, settings, game, winner, loser, close
     }
 
-    public Mode _activeMode = Mode.game;
+    public Mode _activeMode = Mode.close;
 
     public GameUISystem SetActiveMode(Mode mode) { _activeMode = mode; return this; }
     public GameUISystem.Mode GetActiveMode() { return _activeMode; }
 
-    private Mode _archiveMode = Mode.menu;
+    public Mode _archiveMode = Mode.menu;
 
     private void Awake()
     {
@@ -82,10 +89,6 @@ public class GameUISystem : MonoBehaviour
         {
             _extraLifeColorSystem.Add(_extraLifes[i].GetComponent<DissolvableObject>().SetMainColor(_inactiveExtraLifeColor));
         }
-    }
-    private void Start()
-    {
-        _activeMode = Mode.menu;
     }
     private void Update()
     {
@@ -122,6 +125,10 @@ public class GameUISystem : MonoBehaviour
                 break;
 
             case Mode.game:
+                ActivateGameMode();
+                break;
+
+            case Mode.close:
                 CloseAllScreen();
                 break;
         }
@@ -136,8 +143,7 @@ public class GameUISystem : MonoBehaviour
 
             if (_activeMode != Mode.menu)
             {
-                _archiveMode = _activeMode;
-                _activeMode = Mode.menu;
+                ActivateMenuScreen();
             }
             else
             {
@@ -151,129 +157,182 @@ public class GameUISystem : MonoBehaviour
     {
         if (_activeMode != Mode.menu)
         {
+            _archiveMode = _activeMode;
             _activeMode = Mode.menu;
-
-            _menuScreen.SetActive(true);
-            _selectScreen.SetActive(false);
-            _aboutScreen.SetActive(false);
-            _bestScoreScreen.SetActive(false);
-            _settingsScreen.SetActive(false);
-            _winnerScreen.SetActive(false);
-            _loserScreen.SetActive(false);
         }
+
+        _menuScreen.SetActive(true);
+        _selectScreen.SetActive(false);
+        _aboutScreen.SetActive(false);
+        _bestScoreScreen.SetActive(false);
+        _settingsScreen.SetActive(false);
+        _winnerScreen.SetActive(false);
+        _loserScreen.SetActive(false);
+
+        _scoreScreen.SetActive(false);
+        _extraScreen.SetActive(false);
     }
     // активация подменю выбора уровня
     public void ActivateSelectScreen()
     {
         if (_activeMode != Mode.select)
         {
+            _archiveMode = _activeMode;
             _activeMode = Mode.select;
-
-            _menuScreen.SetActive(false);
-            _selectScreen.SetActive(true);
-            _aboutScreen.SetActive(false);
-            _bestScoreScreen.SetActive(false);
-            _settingsScreen.SetActive(false);
-            _winnerScreen.SetActive(false);
-            _loserScreen.SetActive(false);
         }
+
+        _menuScreen.SetActive(false);
+        _selectScreen.SetActive(true);
+        _aboutScreen.SetActive(false);
+        _bestScoreScreen.SetActive(false);
+        _settingsScreen.SetActive(false);
+        _winnerScreen.SetActive(false);
+        _loserScreen.SetActive(false);
+
+        _scoreScreen.SetActive(false);
+        _extraScreen.SetActive(false);
     }
     // активация окна About
     public void ActivateAboutScreen()
     {
         if (_activeMode != Mode.about)
         {
+            _archiveMode = _activeMode;
             _activeMode = Mode.about;
-
-            _menuScreen.SetActive(false);
-            _selectScreen.SetActive(false);
-            _aboutScreen.SetActive(true);
-            _bestScoreScreen.SetActive(false);
-            _settingsScreen.SetActive(false);
-            _winnerScreen.SetActive(false);
-            _loserScreen.SetActive(false);
         }
+
+        _menuScreen.SetActive(false);
+        _selectScreen.SetActive(false);
+        _aboutScreen.SetActive(true);
+        _bestScoreScreen.SetActive(false);
+        _settingsScreen.SetActive(false);
+        _winnerScreen.SetActive(false);
+        _loserScreen.SetActive(false);
+
+        _scoreScreen.SetActive(false);
+        _extraScreen.SetActive(false);
     }
     // активация окна со списком достижений
     public void ActivateBestScoreScreen()
     {
         if (_activeMode != Mode.score)
         {
+            _archiveMode = _activeMode;
             _activeMode = Mode.score;
-
-            _menuScreen.SetActive(false);
-            _selectScreen.SetActive(false);
-            _aboutScreen.SetActive(false);
-            _bestScoreScreen.SetActive(true);
-            _settingsScreen.SetActive(false);
-            _winnerScreen.SetActive(false);
-            _loserScreen.SetActive(false);
         }
+
+        _menuScreen.SetActive(false);
+        _selectScreen.SetActive(false);
+        _aboutScreen.SetActive(false);
+        _bestScoreScreen.SetActive(true);
+        _settingsScreen.SetActive(false);
+        _winnerScreen.SetActive(false);
+        _loserScreen.SetActive(false);
+
+        _scoreScreen.SetActive(false);
+        _extraScreen.SetActive(false);
     }
     // активация меню настроек
     public void ActivateSettingsScreen()
     {
         if (_activeMode != Mode.settings)
         {
+            _archiveMode = _activeMode;
             _activeMode = Mode.settings;
-
-            _menuScreen.SetActive(false);
-            _selectScreen.SetActive(false);
-            _aboutScreen.SetActive(false);
-            _bestScoreScreen.SetActive(false);
-            _settingsScreen.SetActive(true);
-            _winnerScreen.SetActive(false);
-            _loserScreen.SetActive(false);
         }
+
+        _menuScreen.SetActive(false);
+        _selectScreen.SetActive(false);
+        _aboutScreen.SetActive(false);
+        _bestScoreScreen.SetActive(false);
+        _settingsScreen.SetActive(true);
+        _winnerScreen.SetActive(false);
+        _loserScreen.SetActive(false);
+
+        _scoreScreen.SetActive(false);
+        _extraScreen.SetActive(false);
     }
     // активация меню победы
     public void ActivateWinnerScreen()
     {
         if (_activeMode != Mode.winner)
         {
+            _archiveMode = _activeMode;
             _activeMode = Mode.winner;
-
-            _menuScreen.SetActive(false);
-            _selectScreen.SetActive(false);
-            _aboutScreen.SetActive(false);
-            _bestScoreScreen.SetActive(false);
-            _settingsScreen.SetActive(false);
-            _winnerScreen.SetActive(true);
-            _loserScreen.SetActive(false);
         }
+
+        _menuScreen.SetActive(false);
+        _selectScreen.SetActive(false);
+        _aboutScreen.SetActive(false);
+        _bestScoreScreen.SetActive(false);
+        _settingsScreen.SetActive(false);
+        _winnerScreen.SetActive(true);
+        _loserScreen.SetActive(false);
+
+        _scoreScreen.SetActive(true);
+        _extraScreen.SetActive(true);
     }
     // активация меню поражения
     public void ActivateLoserScreen()
     {
         if (_activeMode != Mode.loser)
         {
+            _archiveMode = _activeMode;
             _activeMode = Mode.loser;
-
-            _menuScreen.SetActive(false);
-            _selectScreen.SetActive(false);
-            _aboutScreen.SetActive(false);
-            _bestScoreScreen.SetActive(false);
-            _settingsScreen.SetActive(false);
-            _winnerScreen.SetActive(false);
-            _loserScreen.SetActive(true);
         }
+
+        _menuScreen.SetActive(false);
+        _selectScreen.SetActive(false);
+        _aboutScreen.SetActive(false);
+        _bestScoreScreen.SetActive(false);
+        _settingsScreen.SetActive(false);
+        _winnerScreen.SetActive(false);
+        _loserScreen.SetActive(true);
+
+        _scoreScreen.SetActive(true);
+        _extraScreen.SetActive(true);
     }
 
     // закрыть все окна и дать управление игроку
     public void CloseAllScreen()
     {
+        if (_activeMode != Mode.close)
+        {
+            _archiveMode = _activeMode;
+            _activeMode = Mode.close;
+        }
+
+        _menuScreen.SetActive(false);
+        _selectScreen.SetActive(false);
+        _aboutScreen.SetActive(false);
+        _bestScoreScreen.SetActive(false);
+        _settingsScreen.SetActive(false);
+        _winnerScreen.SetActive(false);
+        _loserScreen.SetActive(false);
+
+        _scoreScreen.SetActive(false);
+        _extraScreen.SetActive(false);
+    }
+
+    // вход в игровое состояние
+    public void ActivateGameMode()
+    {
         if (_activeMode != Mode.game)
         {
+            _archiveMode = _activeMode;
             _activeMode = Mode.game;
-
-            _menuScreen.SetActive(false);
-            _selectScreen.SetActive(false);
-            _aboutScreen.SetActive(false);
-            _bestScoreScreen.SetActive(false);
-            _settingsScreen.SetActive(false);
-            _winnerScreen.SetActive(false);
-            _loserScreen.SetActive(false);
         }
+
+        _menuScreen.SetActive(false);
+        _selectScreen.SetActive(false);
+        _aboutScreen.SetActive(false);
+        _bestScoreScreen.SetActive(false);
+        _settingsScreen.SetActive(false);
+        _winnerScreen.SetActive(false);
+        _loserScreen.SetActive(false);
+
+        _scoreScreen.SetActive(true);
+        _extraScreen.SetActive(true);
     }
 
     // основная функция выключения приложения

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using static UnityEditor.Progress;
 using static UnityEditor.Rendering.FilterWindow;
 
@@ -32,8 +33,23 @@ public class SnakeGameUnitSystem : MonoBehaviour
     public SnakeGameUnitSystem SetMaxVisibleLinks(int links) { _maxVisibleLinks = links; return this; }
     private int _invisibleLinks = 0;                                                 // внутренний счётчик невидимых "виртуальных" звеньев
 
-    private int _snakeExtralife = 3;                                                 // количество экстра жизней
-    public SnakeGameUnitSystem SetSnakeExtraLife(int life) { _snakeExtralife = life; return this; }
+    public int _snakeExtralife = 3;                                                 // количество экстра жизней
+    public SnakeGameUnitSystem SetSnakeExtraLife(int life) 
+    { 
+        _snakeExtralife = life;
+
+        if (_gameUISystem == null)
+        {
+            _gameUISystem = FindObjectOfType<GameUISystem>();
+        }
+
+        if (_gameUISystem != null)
+        {
+            _gameUISystem.SetExtraLifeCount(life);
+        }
+
+        return this; 
+    }
     public int GetSnakeExtraLife() { return _snakeExtralife; }
 
     private int _snakeScoreScaler = 50;                                              // множитель очков за каждое "съеденное" звено
@@ -48,8 +64,38 @@ public class SnakeGameUnitSystem : MonoBehaviour
 
     public int _currentScore = 0;                                                    // счётчик очков на змейке
     public int GetSnakeCurrentScore() { return _currentScore; }
-    public SnakeGameUnitSystem SetSnakeCurrentScore(int score) { _currentScore = score; return this; }
-    public SnakeGameUnitSystem ResetSnakeCurrentScore() { _currentScore = 0; return this; }
+    public SnakeGameUnitSystem SetSnakeCurrentScore(int score) 
+    {
+        _currentScore = score; 
+
+        if (_gameUISystem == null)
+        {
+            _gameUISystem = FindObjectOfType<GameUISystem>();
+        }
+
+        if (_gameUISystem != null)
+        {
+            _gameUISystem.SetTextScore(score.ToString());
+        }
+        
+        return this; 
+    }
+    public SnakeGameUnitSystem ResetSnakeCurrentScore() 
+    { 
+        _currentScore = 0;
+
+        if (_gameUISystem == null)
+        {
+            _gameUISystem = FindObjectOfType<GameUISystem>();
+        }
+
+        if (_gameUISystem != null)
+        {
+            _gameUISystem.SetTextScore(_currentScore.ToString());
+        }
+
+        return this; 
+    }
 
     private GameConstantsKeeper.GameLevelConfig _currentConfig;                      // сохраненная копия конфигурации
 
@@ -67,7 +113,10 @@ public class SnakeGameUnitSystem : MonoBehaviour
 
         // если передан флаг сброса, то записывается значение из конфига,
         // иначе останется текущим на момент записи параметров
-        if (reset_extra_life) _snakeExtralife = config._snakeExtraLife;
+        if (reset_extra_life)
+        {
+            _snakeExtralife = config._snakeExtraLife;
+        }
 
         _gameUISystem.SetExtraLifeCount(_snakeExtralife);             // обновляем количество экстра-жизней
 
@@ -110,6 +159,26 @@ public class SnakeGameUnitSystem : MonoBehaviour
         _currentTriggerEnable = trigger_enable;
         _currentKeyboardEnable = keyboard_enable;
         _currentMouseEnable = mouse_enable;
+
+        if (_gameUISystem == null) _gameUISystem = FindObjectOfType<GameUISystem>();
+
+        // если у нас есть модуль UI
+        if (_gameUISystem != null)
+        {   
+            // передаем ему данные о количестве экстра жизней и очках
+            _gameUISystem
+                .SetExtraLifeCount(_snakeExtralife)
+                .SetTextScore(_currentScore.ToString());
+
+            //if (_snakeExtralife == 0)
+            //{
+            //    Debug.Log("Передаю ноль экстра жизней");
+            //}
+        }
+        else
+        {
+            Debug.Log("Нет UI");
+        }
 
         for (int i = 0; i < _maxVisibleLinks; ++i)
         {
@@ -329,7 +398,7 @@ public class SnakeGameUnitSystem : MonoBehaviour
             {
                 if (_mainGameKeeper != null)
                 {
-                    _gameUISystem.SetAllExtraLifeInactive();             // закрываем все экстра-жизни
+                    _gameUISystem.SetAllExtraLifeInactive();                 // закрываем все экстра-жизни
                     _mainGameKeeper.GameOver(_currentScore);             // передаем киперу набранные очки
                     _currentScore = 0;                                   // сбрасываем набранные очки
                     DestroySnakeUnit();                                  // рессетим змейку
@@ -343,7 +412,9 @@ public class SnakeGameUnitSystem : MonoBehaviour
     // транслирует киперу количество очков и экстра-жизней
     public void LevelComplette()
     {
-        _mainGameKeeper.LevelComplette(_currentScore, _snakeExtralife);
+        _currentScore += (_snakeExtralife * _snakeScoreScaler);           // прибавляем очков на произведение количество экстра жизней на множитель очков
+        _gameUISystem.SetTextScore(_currentScore.ToString());             // загружаем очки в соответствующее UI-поле
+        _mainGameKeeper.LevelComplette(_currentScore, _snakeExtralife);   // передаем управление киперу
     }
 
     // возвращает количество элементов в змее
