@@ -75,7 +75,7 @@ public class GameUISystem : MonoBehaviour
         }
     }
 
-    public GameUISystem EnterMainMenu()
+    public void EnterMainMenu()
     {
         if (Input.GetButtonUp("Cancel"))
         {
@@ -91,12 +91,10 @@ public class GameUISystem : MonoBehaviour
                 _activeMode = _archiveMode;
             }
         }
-
-        return this;
     }
 
     // активация главного меню
-    public GameUISystem ActivateMenuScreen()
+    public void ActivateMenuScreen()
     {
         if (_activeMode != Mode.menu)
         {
@@ -110,11 +108,9 @@ public class GameUISystem : MonoBehaviour
             _winnerScreen.SetActive(false);
             _loserScreen.SetActive(false);
         }
-
-        return this;
     }
     // активация подменю выбора уровня
-    public GameUISystem ActivateSelectScreen()
+    public void ActivateSelectScreen()
     {
         if (_activeMode != Mode.select)
         {
@@ -128,11 +124,9 @@ public class GameUISystem : MonoBehaviour
             _winnerScreen.SetActive(false);
             _loserScreen.SetActive(false);
         }
-
-        return this;
     }
     // активация окна About
-    public GameUISystem ActivateAboutScreen()
+    public void ActivateAboutScreen()
     {
         if (_activeMode != Mode.about)
         {
@@ -146,11 +140,9 @@ public class GameUISystem : MonoBehaviour
             _winnerScreen.SetActive(false);
             _loserScreen.SetActive(false);
         }
-
-        return this;
     }
     // активация окна со списком достижений
-    public GameUISystem ActivateBestScoreScreen()
+    public void ActivateBestScoreScreen()
     {
         if (_activeMode != Mode.score)
         {
@@ -164,11 +156,9 @@ public class GameUISystem : MonoBehaviour
             _winnerScreen.SetActive(false);
             _loserScreen.SetActive(false);
         }
-
-        return this;
     }
     // активация меню настроек
-    public GameUISystem ActivateSettingsScreen()
+    public void ActivateSettingsScreen()
     {
         if (_activeMode != Mode.settings)
         {
@@ -182,11 +172,9 @@ public class GameUISystem : MonoBehaviour
             _winnerScreen.SetActive(false);
             _loserScreen.SetActive(false);
         }
-
-        return this;
     }
     // активация меню победы
-    public GameUISystem ActivateWinnerScreen()
+    public void ActivateWinnerScreen()
     {
         if (_activeMode != Mode.winner)
         {
@@ -200,11 +188,9 @@ public class GameUISystem : MonoBehaviour
             _winnerScreen.SetActive(true);
             _loserScreen.SetActive(false);
         }
-
-        return this;
     }
     // активация меню поражения
-    public GameUISystem ActivateLoserScreen()
+    public void ActivateLoserScreen()
     {
         if (_activeMode != Mode.loser)
         {
@@ -218,12 +204,10 @@ public class GameUISystem : MonoBehaviour
             _winnerScreen.SetActive(false);
             _loserScreen.SetActive(true);
         }
-
-        return this;
     }
 
     // закрыть все окна и дать управление игроку
-    public GameUISystem CloseAllScreen()
+    public void CloseAllScreen()
     {
         if (_activeMode != Mode.game)
         {
@@ -237,8 +221,6 @@ public class GameUISystem : MonoBehaviour
             _winnerScreen.SetActive(false);
             _loserScreen.SetActive(true);
         }
-
-        return this;
     }
 
     // основная функция выключения приложения
