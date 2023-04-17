@@ -157,83 +157,85 @@ public class SnakeElementSystem : DissolvableObject
         }
     }
 
+    // включает или выключает триггер
+    public SnakeElementSystem SetTriggerEnable(bool enable) { _basicTrigger.enabled = enable; return this; }
 
     // обработка столкновений с другими объектами
     private void OnTriggerEnter(Collider other)
     {
-
-        switch (_elementType)
+        if (_basicTrigger.enabled)
         {
-            case SnakeElementType.Food:
-                break;
-            case SnakeElementType.Link:
+            switch (_elementType)
+            {
+                case SnakeElementType.Food:
+                    break;
+                case SnakeElementType.Link:
 
-                if (other.gameObject.tag == "BoxLTrigger")
-                {
-                    Vector3 current_transform = gameObject.transform.position;
-                    current_transform.x -= 0.5f;
-                    gameObject.transform.position = current_transform;
-                }
+                    if (other.gameObject.tag == "BoxLTrigger")
+                    {
+                        Vector3 current_transform = gameObject.transform.position;
+                        current_transform.x -= 0.5f;
+                        gameObject.transform.position = current_transform;
+                    }
 
-                else if (other.gameObject.tag == "BoxRTrigger")
-                {
-                    Vector3 current_transform = gameObject.transform.position;
-                    current_transform.x += 0.5f;
-                    gameObject.transform.position = current_transform;
-                }
+                    else if (other.gameObject.tag == "BoxRTrigger")
+                    {
+                        Vector3 current_transform = gameObject.transform.position;
+                        current_transform.x += 0.5f;
+                        gameObject.transform.position = current_transform;
+                    }
 
-                break;
+                    break;
 
-            // обработка событий столкновений для головы змейки
-            case SnakeElementType.Head:
+                // обработка событий столкновений для головы змейки
+                case SnakeElementType.Head:
 
-                if (other.gameObject.tag == "SnakeFood")
-                {
-                    // если на пути еда - добавляем элемент в змейку
-                    _gameUnitSystem.AddSnakeNewLink();
-                    // проигрываем вспышку поедания еды
-                    _foodParticle.Play();
-                    // проигрываем звук "поедания"
-                    _soundSystem.PlaySnakeEat();
-                    // запускаем удаление "скушанной" еды с элемента уровня
-                    other.gameObject
-                        .GetComponent<SnakeElementSystem>()
-                        .DestroyFoodElement();
-                }
+                    if (other.gameObject.tag == "SnakeFood")
+                    {
+                        // если на пути еда - добавляем элемент в змейку
+                        _gameUnitSystem.AddSnakeNewLink();
+                        // проигрываем вспышку поедания еды
+                        _foodParticle.Play();
+                        // проигрываем звук "поедания"
+                        _soundSystem.PlaySnakeEat();
+                        // запускаем удаление "скушанной" еды с элемента уровня
+                        other.gameObject
+                            .GetComponent<SnakeElementSystem>()
+                            .DestroyFoodElement();
+                    }
 
-                else if (other.gameObject.tag == "BoxFTrigger")
-                {
-                    // если на пути появился ящик
-                    other.gameObject
-                        .GetComponentInParent<ElementBoxSystem>()
-                        .DecrementBoxScore();
-                    // проигрываем звук "столкновения"
-                    _soundSystem.PlayBoxBreak();
-                    // удаляем звено из змейки
-                    _gameUnitSystem.RemoveLastSnakeElements(0.2f);
+                    else if (other.gameObject.tag == "BoxFTrigger")
+                    {
+                        // если на пути появился ящик
+                        other.gameObject
+                            .GetComponentInParent<ElementBoxSystem>()
+                            .DecrementBoxScore();
+                        // проигрываем звук "столкновения"
+                        _soundSystem.PlayBoxBreak();
+                        // удаляем звено из змейки
+                        _gameUnitSystem.RemoveLastSnakeElements(0.2f);
 
-                    // двигаем весь уровень назад
-                    _gameLevelSystem.MovingLevelDown(4.5f);
-                }
+                        // двигаем весь уровень назад
+                        _gameLevelSystem.MovingLevelDown(4.5f);
+                    }
 
-                else if(other.gameObject.tag == "BoxLTrigger")
-                {
-                    Vector3 current_transform = gameObject.transform.position;
-                    current_transform.x -= 0.5f;
-                    gameObject.transform.position = current_transform;
-                }
+                    else if (other.gameObject.tag == "BoxLTrigger")
+                    {
+                        Vector3 current_transform = gameObject.transform.position;
+                        current_transform.x -= 0.5f;
+                        gameObject.transform.position = current_transform;
+                    }
 
-                else if (other.gameObject.tag == "BoxRTrigger")
-                {
-                    Vector3 current_transform = gameObject.transform.position;
-                    current_transform.x += 0.5f;
-                    gameObject.transform.position = current_transform;
-                }
+                    else if (other.gameObject.tag == "BoxRTrigger")
+                    {
+                        Vector3 current_transform = gameObject.transform.position;
+                        current_transform.x += 0.5f;
+                        gameObject.transform.position = current_transform;
+                    }
 
-                break; 
-            
+                    break;
+            }
         }
-        
     }
 
     private void DestroyFoodElement()
@@ -245,11 +247,14 @@ public class SnakeElementSystem : DissolvableObject
         }
     }
 
+    private bool _enableMouse = false;
+    public SnakeElementSystem SetMouseController(bool enable) { _enableMouse = enable; return this; }
+
     [ExecuteInEditMode]
     private void MouseController()
     {
         // управление работает только для головы
-        if (_elementType == SnakeElementType.Head)
+        if (_elementType == SnakeElementType.Head && _enableMouse)
         {
             // при нажатой кнопке мышки
             if (Input.GetMouseButton(0))
@@ -266,15 +271,15 @@ public class SnakeElementSystem : DissolvableObject
                 transform.position = current_transform;
 
 
-                RaycastHit hit;  // стреляем кастом
-                if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
-                {
-                    // если кастуется на "голову" змейки
-                    if(true /*hit.collider.gameObject.tag == "SnakeHead"*/)
-                    {
+                //RaycastHit hit;  // стреляем кастом
+                //if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
+                //{
+                //    // если кастуется на "голову" змейки
+                //    if(true /*hit.collider.gameObject.tag == "SnakeHead"*/)
+                //    {
                         
-                    }
-                }
+                //    }
+                //}
             }
 
             lastHeadPosition = gameObject.transform.position;
@@ -289,11 +294,14 @@ public class SnakeElementSystem : DissolvableObject
         _h = Input.GetAxis("Horizontal");
     }
 
+    private bool _enableKeyboard = true;
+    public SnakeElementSystem SetKeyboardController(bool enable) { _enableKeyboard = enable; return this; }
+
     [ExecuteInEditMode]
     private void KeyBoardController()
     {
         // управление работает только для головы
-        if (_elementType == SnakeElementType.Head)
+        if (_elementType == SnakeElementType.Head && _enableKeyboard)
         {
             Inputs();   // голова постоянно будет получать данные со стрелок
 

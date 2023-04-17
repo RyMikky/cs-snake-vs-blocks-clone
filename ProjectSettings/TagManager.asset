@@ -17,6 +17,7 @@ TagManager:
   - MenuScreen
   - MenuUISystem
   - SelectScreen
+  - StatsScreen
   layers:
   - Default
   - TransparentFX

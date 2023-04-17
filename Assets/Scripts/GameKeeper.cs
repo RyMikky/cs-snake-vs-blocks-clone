@@ -1,4 +1,4 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -27,26 +27,26 @@ public class GameKeeper : MonoBehaviour
         _gameUISystem = _gameMenu.GetComponent<GameUISystem>();
         _gameSoundSystem = _gameSound.GetComponent<GameSoundSystem>();
 
-        // активирует автоматический бекграундный уровень без змейки, который фоном будет бесконечно двигаться
+        // Р°РєС‚РёРІРёСЂСѓРµС‚ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРёР№ Р±РµРєРіСЂР°СѓРЅРґРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ Р±РµР· Р·РјРµР№РєРё, РєРѕС‚РѕСЂС‹Р№ С„РѕРЅРѕРј Р±СѓРґРµС‚ Р±РµСЃРєРѕРЅРµС‡РЅРѕ РґРІРёРіР°С‚СЊСЃСЏ
         _gameLevel = Instantiate(_gameLevelPrefab, transform) as GameObject;
         _gameLevel.GetComponent<GameLevelSystem>()
             .ConstructNewLevelSession(
                 _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.demo));
 
-        // активирует основное меню и передаёт на него управление
+        // Р°РєС‚РёРІРёСЂСѓРµС‚ РѕСЃРЅРѕРІРЅРѕРµ РјРµРЅСЋ Рё РїРµСЂРµРґР°С‘С‚ РЅР° РЅРµРіРѕ СѓРїСЂР°РІР»РµРЅРёРµ
         _gameUISystem.ActivateMenuScreen();
     }
 
-    // -------------------------------------- блок конструкторов уровня ---------------------------------------
+    // -------------------------------------- Р±Р»РѕРє РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРѕРІ СѓСЂРѕРІРЅСЏ ---------------------------------------
 
-    // конструирует уровень легкой сложности с новой змейкой
+    // РєРѕРЅСЃС‚СЂСѓРёСЂСѓРµС‚ СѓСЂРѕРІРµРЅСЊ Р»РµРіРєРѕР№ СЃР»РѕР¶РЅРѕСЃС‚Рё СЃ РЅРѕРІРѕР№ Р·РјРµР№РєРѕР№
     public void ConstructNewEasyLevel()
     {
         _gameSnake = Instantiate(_gameSnakePrefab, transform) as GameObject;
         ConstructEasyLevel();
     }
 
-    // конструирует уровень легкой сложности со старой змейкой
+    // РєРѕРЅСЃС‚СЂСѓРёСЂСѓРµС‚ СѓСЂРѕРІРµРЅСЊ Р»РµРіРєРѕР№ СЃР»РѕР¶РЅРѕСЃС‚Рё СЃРѕ СЃС‚Р°СЂРѕР№ Р·РјРµР№РєРѕР№
     public void ConstructEasyLevel()
     {
         _gameLevel.GetComponent<GameLevelSystem>()
@@ -54,7 +54,7 @@ public class GameKeeper : MonoBehaviour
                 _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.easy));
     }
 
-    // конструирует уровень средней сложности со старой змейкой
+    // РєРѕРЅСЃС‚СЂСѓРёСЂСѓРµС‚ СѓСЂРѕРІРµРЅСЊ СЃСЂРµРґРЅРµР№ СЃР»РѕР¶РЅРѕСЃС‚Рё СЃРѕ СЃС‚Р°СЂРѕР№ Р·РјРµР№РєРѕР№
     public void ConstructNormalLevel()
     {
         _gameLevel.GetComponent<GameLevelSystem>()
@@ -62,7 +62,7 @@ public class GameKeeper : MonoBehaviour
                 _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.normal));
     }
 
-    // конструирует уровень высокой сложности со старой змейкой
+    // РєРѕРЅСЃС‚СЂСѓРёСЂСѓРµС‚ СѓСЂРѕРІРµРЅСЊ РІС‹СЃРѕРєРѕР№ СЃР»РѕР¶РЅРѕСЃС‚Рё СЃРѕ СЃС‚Р°СЂРѕР№ Р·РјРµР№РєРѕР№
     public void ConstructHardLevel()
     {
         _gameLevel.GetComponent<GameLevelSystem>()
@@ -70,7 +70,7 @@ public class GameKeeper : MonoBehaviour
                 _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.hard));
     }
 
-    // конструирует уровень оч.выской сложности со старой змейкой
+    // РєРѕРЅСЃС‚СЂСѓРёСЂСѓРµС‚ СѓСЂРѕРІРµРЅСЊ РѕС‡.РІС‹СЃРѕРєРѕР№ СЃР»РѕР¶РЅРѕСЃС‚Рё СЃРѕ СЃС‚Р°СЂРѕР№ Р·РјРµР№РєРѕР№
     public void ConstructInsaneLevel()
     {
         _gameLevel.GetComponent<GameLevelSystem>()
@@ -78,5 +78,11 @@ public class GameKeeper : MonoBehaviour
                 _gameConstantsKeeper.GetLevelConfiguration(GameConstantsKeeper.GameDifficulty.insane));
     }
 
+    // -------------------------------------- Р±Р»РѕРє РёРіСЂРѕРІС‹С… СЃРѕСЃС‚РѕСЏРЅРёР№ ------------------------------------------
 
+    // С„СѓРЅРєС†РёСЏ РІС‹Р·С‹РІР°СЋС‰Р°СЏ СЃРѕСЃС‚РѕСЏРЅРёРµ РїСЂРѕРёРіСЂС‹С€Р°
+    public void GameOver(int score)
+    {
+
+    }
 }

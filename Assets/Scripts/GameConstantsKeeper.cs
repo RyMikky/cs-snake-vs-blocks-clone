@@ -194,6 +194,8 @@ public class GameConstantsKeeper : MonoBehaviour
         // ------------------------------ блок настроек змеи -------------------------------
 
         public int _snakeLinkVisible { set; get; }                // количество отображаемых звеньев змеи
+        public int _snakeExtraLife { set; get; }                  // количество "экстра" жизней
+        public int _snakeScoreScaler { set; get; }                // множитель получаемых очков на уровне
 
         // ------------------------------ блок настроек камеры -----------------------------
 
@@ -203,7 +205,7 @@ public class GameConstantsKeeper : MonoBehaviour
         // ээээбанцуа инициализация... ох уж этот шарп...
         public GameLevelConfig(int gamelevelwidth, int boxmaxcount, int boxminvalue, int boxmaxvalue, int linevisible, 
             int linemaxcount, float levelminspeed, float levelmaxspeed, float levelstartspeed, int snakelinkvisible, 
-            float mincameradistance, float maxcameradistance)
+            int snakeextralife, int snakescorescaler, float mincameradistance, float maxcameradistance)
         {
             _gameLevelWidth = gamelevelwidth;
             _boxMaxCount = boxmaxcount;
@@ -215,6 +217,8 @@ public class GameConstantsKeeper : MonoBehaviour
             _levelMaxSpeed = levelmaxspeed;
             _LevelStartSpeed = levelstartspeed;
             _snakeLinkVisible = snakelinkvisible;
+            _snakeExtraLife = snakeextralife;
+            _snakeScoreScaler = snakescorescaler;
             _minCameraDistance = mincameradistance;
             _maxCameraDistance = maxcameradistance;
         }
@@ -228,11 +232,11 @@ public class GameConstantsKeeper : MonoBehaviour
     private static readonly Dictionary<GameDifficulty, GameLevelConfig> __GAME_DIFFICULTY__
         = new Dictionary<GameDifficulty, GameLevelConfig>()
         {
-            {GameDifficulty.demo, new GameLevelConfig(6, 3, 1, 12, 35, 0, 0.1f, 0.8f, 0.35f, 8, 60, 60) },
-            {GameDifficulty.easy, new GameLevelConfig(6, 4, 2, 8, 35, 150, 0.1f, 0.7f, 0.3f, 8, 50, 65) },
-            {GameDifficulty.normal, new GameLevelConfig(6, 4, 3, 10, 35, 200, 0.2f, 0.8f, 0.4f, 10, 50, 70) },
-            {GameDifficulty.hard, new GameLevelConfig(6, 5, 4, 10, 35, 250, 0.3f, 0.9f, 0.5f, 10, 50, 70) },
-            {GameDifficulty.insane, new GameLevelConfig(6, 5, 6, 12, 35, 350, 0.4f, 1.0f, 0.6f, 12, 50, 75) }
+            {GameDifficulty.demo, new GameLevelConfig(6, 3, 1, 12, 35, 0, 0.1f, 0.8f, 0.35f, 8, 3, 50, 60, 60) },
+            {GameDifficulty.easy, new GameLevelConfig(6, 4, 2, 8, 35, 150, 0.1f, 0.7f, 0.3f, 8, 3, 100, 50, 65) },
+            {GameDifficulty.normal, new GameLevelConfig(6, 4, 3, 10, 35, 200, 0.2f, 0.8f, 0.4f, 10, 2, 250, 50, 70) },
+            {GameDifficulty.hard, new GameLevelConfig(6, 5, 4, 10, 35, 250, 0.3f, 0.9f, 0.5f, 10, 2, 750, 50, 70) },
+            {GameDifficulty.insane, new GameLevelConfig(6, 5, 6, 12, 35, 350, 0.4f, 1.0f, 0.6f, 12, 1, 1500, 50, 75) }
         };
 
     public GameLevelConfig GetLevelConfiguration(GameDifficulty difficulty)

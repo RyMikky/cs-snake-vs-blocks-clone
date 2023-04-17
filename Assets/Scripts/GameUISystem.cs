@@ -10,7 +10,7 @@ public class GameUISystem : MonoBehaviour
     public GameObject _aboutScreen;
     public GameObject _bestScoreScreen;
     public GameObject _settingsScreen;
-    public GameObject _aquaScreen;
+    public GameObject _statsScreen;
 
     public GameObject _gameLevel;
     public GameObject _audioEngine;
@@ -84,7 +84,7 @@ public class GameUISystem : MonoBehaviour
         _activeMode = Mode.select;
         _menuScreen.SetActive(false);
         _selectScreen.SetActive(true);
-        _aquaScreen.SetActive(false);
+        _statsScreen.SetActive(false);
         _bestScoreScreen.SetActive(false);
         _settingsScreen.SetActive(false);
         _aboutScreen.SetActive(false);
@@ -98,7 +98,7 @@ public class GameUISystem : MonoBehaviour
         _activeMode = Mode.about;
         _menuScreen.SetActive(false);
         _selectScreen.SetActive(false);
-        _aquaScreen.SetActive(false);
+        _statsScreen.SetActive(false);
         _bestScoreScreen.SetActive(false);
         _settingsScreen.SetActive(false);
         _aboutScreen.SetActive(true);
@@ -112,7 +112,7 @@ public class GameUISystem : MonoBehaviour
         _activeMode = Mode.settings;
         _menuScreen.SetActive(false);
         _selectScreen.SetActive(false);
-        _aquaScreen.SetActive(false);
+        _statsScreen.SetActive(false);
         _bestScoreScreen.SetActive(false);
         _settingsScreen.SetActive(true);
         _aboutScreen.SetActive(false);
@@ -126,7 +126,7 @@ public class GameUISystem : MonoBehaviour
         _activeMode = Mode.score;
         _menuScreen.SetActive(false);
         _selectScreen.SetActive(false);
-        _aquaScreen.SetActive(false);
+        _statsScreen.SetActive(false);
         _bestScoreScreen.SetActive(true);
         _settingsScreen.SetActive(false);
         _aboutScreen.SetActive(false);
@@ -140,7 +140,7 @@ public class GameUISystem : MonoBehaviour
         _activeMode = Mode.menu;
         _selectScreen.SetActive(false);
         _aboutScreen.SetActive(false);
-        _aquaScreen.SetActive(false);
+        _statsScreen.SetActive(false);
         _bestScoreScreen.SetActive(false);
         _settingsScreen.SetActive(false);
         _menuScreen.SetActive(true);
@@ -154,7 +154,7 @@ public class GameUISystem : MonoBehaviour
         _activeMode = Mode.aqua;
         _selectScreen.SetActive(false);
         _aboutScreen.SetActive(false);
-        _aquaScreen.SetActive(true);
+        _statsScreen.SetActive(true);
         _bestScoreScreen.SetActive(false);
         _settingsScreen.SetActive(false);
         _menuScreen.SetActive(false);
@@ -171,10 +171,10 @@ public class GameUISystem : MonoBehaviour
         _menuScreen.SetActive(false);
         _bestScoreScreen.SetActive(false);
         _settingsScreen.SetActive(false);
-        _aquaScreen.SetActive(true);
+        _statsScreen.SetActive(true);
 
         //_gameLevel.GetComponent<GameLevelEngine>().SetTowerRotation(false);
-        //_aquaScreen.GetComponent<AquaScreenEngine>().SetScreenMode(AquaScreenEngine.Mode.lose);
+        //_statsScreen.GetComponent<AquaScreenEngine>().SetScreenMode(AquaScreenEngine.Mode.lose);
         //_audioEngine.GetComponent<AudioEngine>().SetBackgroundVolume(0.8f);
     }
 
@@ -186,10 +186,10 @@ public class GameUISystem : MonoBehaviour
         _menuScreen.SetActive(false);
         _bestScoreScreen.SetActive(false);
         _settingsScreen.SetActive(false);
-        _aquaScreen.SetActive(true);
+        _statsScreen.SetActive(true);
 
         //_gameLevel.GetComponent<GameLevelEngine>().SetTowerRotation(false);
-        //_aquaScreen.GetComponent<AquaScreenEngine>().SetScreenMode(AquaScreenEngine.Mode.win);
+        //_statsScreen.GetComponent<AquaScreenEngine>().SetScreenMode(AquaScreenEngine.Mode.win);
         //_audioEngine.GetComponent<AudioEngine>().SetBackgroundVolume(0.8f);
     }
 
@@ -199,7 +199,7 @@ public class GameUISystem : MonoBehaviour
         _selectScreen.SetActive(false);
         _aboutScreen.SetActive(false);
         _menuScreen.SetActive(false);
-        _aquaScreen.SetActive(false);
+        _statsScreen.SetActive(false);
         _bestScoreScreen.SetActive(false);
         _settingsScreen.SetActive(false);
 
