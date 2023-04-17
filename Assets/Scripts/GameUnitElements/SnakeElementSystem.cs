@@ -7,6 +7,8 @@ using static UnityEditor.Rendering.FilterWindow;
 
 public class SnakeElementSystem : DissolvableObject
 {
+    private GameKeeper _mainGameKeeper;        // базовая система управления игрой и игровыми состояниями
+    public SnakeElementSystem SetGameKeeper(GameKeeper keeper) { _mainGameKeeper = keeper; return this; }
 
     public enum SnakeElementType
     {
@@ -231,6 +233,18 @@ public class SnakeElementSystem : DissolvableObject
                         Vector3 current_transform = gameObject.transform.position;
                         current_transform.x += 0.5f;
                         gameObject.transform.position = current_transform;
+                    }
+
+                    else if (other.gameObject.tag == "FinishCollider")
+                    {
+                        // как только пересекаем финиш, то блокируем скорость прокрутки
+                        _gameLevelSystem
+                            .SetCurrenGameSpeed(0.2f)                // задаем скорость перемещения ленты
+                            .SetAccelerationFlag(false);             // фиксируем скорость перемещения ленты
+
+                        _gameUnitSystem
+                            .SetElementsTriggerEnable(false)         // выключаем обработку коллизий у всей змеи
+                            .LevelComplette();                       // передаем данные о прохождении уровня
                     }
 
                     break;

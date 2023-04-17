@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dissolveDuration: 1
+  solveDuration: 1
 --- !u!65 &7004669869627867554
 BoxCollider:
   m_ObjectHideFlags: 0

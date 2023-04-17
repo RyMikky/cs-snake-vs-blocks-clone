@@ -2,10 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 using static UnityEditor.Rendering.FilterWindow;
 
 public class SnakeGameUnitSystem : MonoBehaviour
 {
+    private GameKeeper _mainGameKeeper;         // базовая система управления игрой и игровыми состояниями
+    public SnakeGameUnitSystem SetGameKeeper(GameKeeper keeper) { _mainGameKeeper = keeper; return this; }
+
+    // TODO Сюда необходимо добавить систему отображения очков и экстра жизней
+
     public enum SnakeUnitMode
     {
         Empty, Demo, Default
@@ -30,9 +36,6 @@ public class SnakeGameUnitSystem : MonoBehaviour
     private int _snakeScoreScaler = 50;                                              // множитель очков за каждое "съеденное" звено
     public SnakeGameUnitSystem SetSnakeScoreScaler(int scaler) { _snakeScoreScaler = scaler; return this; }
     public int GetSnakeScoreScaler() { return _snakeScoreScaler; }
-
-    private GameKeeper _mainGameKeeper;                                              // объект организатора игры
-    public SnakeGameUnitSystem SetGameKeeper(GameKeeper keeper) { _mainGameKeeper = keeper; return this; }
 
     private GameObject _snakeHeadGO;                                                 // объект головы текущей змейки
     private SnakeElementSystem _snakeHeadSystem;                                     // скрипт головы змейки
@@ -97,7 +100,6 @@ public class SnakeGameUnitSystem : MonoBehaviour
         ConstructNewSnake(trigger_enable, keyboard_enable, mouse_enable, active);       // запускаем конструктор
         return this; 
     }
-
     private SnakeGameUnitSystem ConstructNewSnake(bool trigger_enable, bool keyboard_enable, bool mouse_enable, bool active)
     {
         _currentTriggerEnable = trigger_enable;
@@ -118,6 +120,7 @@ public class SnakeGameUnitSystem : MonoBehaviour
 
                 // первый элемент создаётся в нулевой локальной точке и на 25% больше остальных
                 link_system
+                    .SetGameKeeper(_mainGameKeeper)
                     .SetTriggerEnable(_currentTriggerEnable)
                     .SetKeyboardController(_currentKeyboardEnable)
                     .SetMouseController(_currentMouseEnable)
@@ -200,14 +203,24 @@ public class SnakeGameUnitSystem : MonoBehaviour
     // обновляет количество элементов на голове змеи
     private void UpdateLinksCount()
     {
-        if(_snakeElements.Count + _invisibleLinks> 0)
+        if (_snakeElements.Count + _invisibleLinks> 0)
         {
             _snakeHeadSystem.SetLinksCount(_snakeElements.Count + _invisibleLinks);
         }
     }
 
+    // устанавливает включение и отключение триггера в элементах змеи
+    public SnakeGameUnitSystem SetElementsTriggerEnable(bool enable)
+    {
+        foreach (var item in _snakeElements) 
+        {
+            item.GetComponent<SnakeElementSystem>().SetTriggerEnable(enable);
+        }
+        return this;
+    }
+
     // добавляет новый элемент в змею
-    public void AddSnakeNewLink()
+    public SnakeGameUnitSystem AddSnakeNewLink()
     {
         // если максимум видимых звеньев не превышен
         if (_snakeElements.Count < _maxVisibleLinks)
@@ -259,9 +272,11 @@ public class SnakeGameUnitSystem : MonoBehaviour
 
         // также обновляем очки за "поедание" - просто прибавляем скалер очков
         _currentScore += _snakeScoreScaler;
+
+        return this;
     }
     // удаляет крайний элемент змеи
-    public void RemoveLastSnakeElements(float time)
+    public SnakeGameUnitSystem RemoveLastSnakeElements(float time)
     {
         // если количество всех возможных элементов змейки как видимых так и невидимых больше одного
         if ( _snakeElements.Count + _invisibleLinks > 1)
@@ -306,7 +321,16 @@ public class SnakeGameUnitSystem : MonoBehaviour
                 }
             }
         }
+
+        return this;
     }
+
+    // транслирует киперу количество очков и экстра-жизней
+    public void LevelComplette()
+    {
+        _mainGameKeeper.LevelComplette(_currentScore, _snakeExtralife);
+    }
+
     // возвращает количество элементов в змее
     public int GetElementsCount()
     {
@@ -314,7 +338,7 @@ public class SnakeGameUnitSystem : MonoBehaviour
     }
 
     // изменение масштаба элементов змейки
-    public void SetElementsScale(float scale)
+    public SnakeGameUnitSystem SetElementsScale(float scale)
     {
         if (scale != _elementScaler)
         {
@@ -328,6 +352,8 @@ public class SnakeGameUnitSystem : MonoBehaviour
                 system.SetElementScale(_elementScaler);
             }
         }
+
+        return this;
     }
 
     // УСТАРЕЛО конструктор тестовой змейки 

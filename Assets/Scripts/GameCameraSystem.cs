@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameCameraSystem : MonoBehaviour
-{
+{ 
+    private GameKeeper _mainGameKeeper;      // базовая система управления игрой и игровыми состояниями
+    public GameCameraSystem SetGameKeeper(GameKeeper keeper) { _mainGameKeeper = keeper; return this; }
 
     public Camera _mainCamera;
     public float _currentScroll;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()

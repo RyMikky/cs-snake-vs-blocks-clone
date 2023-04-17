@@ -5,11 +5,15 @@ using static UnityEditor.Rendering.FilterWindow;
 
 public class GameLevelElementSystem : DissolvableObject
 {
+    private GameKeeper _mainGameKeeper;            // базовая система управления игрой и игровыми состояниями
+    public GameLevelElementSystem SetGameKeeper(GameKeeper keeper) { _mainGameKeeper = keeper; return this; }
+
 
     public GameObject _elementBorderPrefab;                 // объект границы элемента уровня
     public GameObject _elementSectorPrefab;                 // объект сектора поля уровня
     public GameObject _elementBoxPrefab;                    // объект блок игрового поля
     public GameObject _elementSnakePrefab;                  // объект звено змейки
+    public GameObject _finishCollider;                      // объект-триггер пересечения линии финиша
 
     public enum ActivationMode
     {
@@ -94,6 +98,17 @@ public class GameLevelElementSystem : DissolvableObject
         }
     }
 
+    public void SolveGameLevelFinishLine(float time)
+    {
+        DestroyAllElements();                                       // на всякий пожарный
+        SectorsConstruct(time, new Color(0.2f, 0.8f, 0.2f));        // конструирует сектора элемента уровня
+        BordersConstruct(time, new Color(0.2f, 0.8f, 0.2f));        // конструирует границы элемента уровня
+
+        GameObject FinishCollider = Instantiate(_finishCollider, transform) as GameObject;
+
+        // Color 0.2 0.8 0.2
+    }
+
     // реконструирует элементы уровня по заданым заранее параметрам 
     public void GameLevelElementReconstruct()
     {
@@ -112,6 +127,107 @@ public class GameLevelElementSystem : DissolvableObject
         BoxesConstruct(time);                               // конструирует ящики на элементе уровня
         FoodConstruct(time);                                // конструирует "еду" на элементе уровня
     }
+
+    // проецирует на элемент карты напольные сектора с заданым временем появления и основным цветом
+    private void SectorsConstruct(float time, Color color)
+    {
+        // берем крайнюю правую координату для локальной позиции сектора
+        float right_x_position = _sectorGeometryScaler.x * (_elementSectorCount - 1) / 2;
+        // добавляем позицию в список и ставим флаг пустоты
+        _elementsXpositions.Add(right_x_position); _elementSectorsClear.Add(true);
+
+        for (int i = 0; i < _elementSectorCount; ++i)
+        {
+            GameObject element = Instantiate(_elementSectorPrefab, transform) as GameObject;
+
+            // берем локальный трансформ созданного элемента
+            Vector3 element_position = element.transform.localPosition;
+            // задаём координату по X из ранее полученного значения
+            element_position.x = right_x_position;
+            // перезаписываем положение элемента
+            element.transform.localPosition = element_position;
+
+            if (time > 0)
+            {
+                // если задано время то "проявляем объект"
+                float minTime = time * (1 - 0.2f);       // минимальное время в диапазоне time - 20%
+                float maxTime = time * (1 + 0.2f);       // максимальное время в диапазоне time + 20%
+
+                element.GetComponent<DissolvableObject>()
+                    .SetMainColor(color).StartSolving((float)(_random.NextDouble() * (maxTime - minTime) + minTime));
+            }
+
+            // записываем элемент в список
+            _elementSectors.Add(element);
+
+            // декремируем позицию для следующего элемента
+            right_x_position -= _sectorGeometryScaler.x;
+
+            if (i < _elementSectorCount - 1)
+            {
+                // добавляем позицию в список и ставим флаг пустоты
+                _elementsXpositions.Add(right_x_position); _elementSectorsClear.Add(true);
+            }
+        }
+    }
+    // проецирует на элемент карты границы уровня с заданым временем появления и основным цветом
+    private void BordersConstruct(float time, Color color)
+    {
+        if (_borderType == BorderType.None) return;
+
+        // берем крайнюю правую координату для локальной позиции сектора и прибавляем половину от скалера сектора и половину от скалера границы
+        float right_x_position = (_sectorGeometryScaler.x * (_elementSectorCount - 1) / 2)
+            + (_sectorGeometryScaler.x / 2) + (_borderGeometryScaler.x / 2);
+
+        // крайняя левая координата равняется правой с отрицательным знаком
+        float left_x_position = -right_x_position;
+        // возвышение граничного элемента
+        float border_level = (_borderGeometryScaler.y - _sectorGeometryScaler.y) / 2;
+
+        switch (_borderType)
+        {
+            case BorderType.Left:
+                BorderMaker(left_x_position, border_level, time, color);
+                break;
+
+            case BorderType.Right:
+                BorderMaker(right_x_position, border_level, time, color);
+                break;
+
+            case BorderType.Both:
+                BorderMaker(left_x_position, border_level, time, color);
+                BorderMaker(right_x_position, border_level, time, color);
+                break;
+        }
+    }
+    // создает границу уровня по заданым координатам и времени появления и основным цветом
+    private void BorderMaker(float x_position, float y_position, float time, Color color)
+    {
+        GameObject border = Instantiate(_elementBorderPrefab, transform) as GameObject;
+
+        // берем локальный трансформ созданного элемента
+        Vector3 element_position = border.transform.localPosition;
+        // задаём координату по X из полученного значения
+        element_position.x = x_position;
+        // задаём координату по Y из полученного значения
+        element_position.y = y_position;
+        // перезаписываем положение элемента
+        border.transform.localPosition = element_position;
+
+        if (time > 0)
+        {
+            // если задано время то "проявляем объект"
+            float minTime = time * (1 - 0.2f);       // минимальное время в диапазоне time - 20%
+            float maxTime = time * (1 + 0.2f);       // максимальное время в диапазоне time + 20%
+
+            border.GetComponent<DissolvableObject>()
+                .SetMainColor(color).StartSolving((float)(_random.NextDouble() * (maxTime - minTime) + minTime));
+        }
+
+        // записываем элемент в список
+        _elementBorders.Add(border);
+    }
+
 
     // проецирует на элемент карты напольные сектора с заданым временем появления
     private void SectorsConstruct(float time)

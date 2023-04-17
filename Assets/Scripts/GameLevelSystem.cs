@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GameLevelSystem : MonoBehaviour
 {
+    private GameKeeper _mainGameKeeper;     // базовая система управления игрой и игровыми состояниями
+    public GameLevelSystem SetGameKeeper(GameKeeper keeper) { _mainGameKeeper = keeper; return this; }
+
 
     public GameObject _snakeUnitPrefab;                            // префаб змейки которая создаётся на уровне
     public GameObject _gameLevelElementPrefab;                     // префаб элемента уровня
@@ -24,7 +27,8 @@ public class GameLevelSystem : MonoBehaviour
     [Header("Блок настроек генерации уровня")]
     public LevelGenerator _gameLevelGeneration = LevelGenerator.procedure;
     public LevelType _gameLevelType = LevelType.infinity;
-    
+    public GameLevelSystem SetGameLevelType(LevelType type) { _gameLevelType = type; return this; }
+
     public int _gameLevelWidth = 6;                                // ширина игрового поля
     public int _lineBoxMaxCount = 6;                               // максимальное количество ящиков на элементе
 
@@ -229,18 +233,22 @@ public class GameLevelSystem : MonoBehaviour
     // удаление первого элемента списка вышедшего за область видимости
     void UpdateOutOfRangeElements()
     {
-        Vector3 position = _gameLevelElements.First.Value.transform.position;
-
-        if (position.z > _lineVisibleCount + _gameBoxScaler)
+        // работает только если есть элементы
+        if (_gameLevelElements.Count != 0)
         {
-            // вызываем удаление и растворение класса элемента уровня
-            _gameLevelElements.First.Value.GetComponent<GameLevelElementSystem>().DissolveAndDestroy(1f);
-            // чтобы элемент продолжал двигаться вперед, записываем его в список растворяемых элементов
-            _gameDissolvedElements.AddFirst(_gameLevelElements.First.Value);
-            // запускаем процесс удаления элемента уже тут, так как прошлая команда удалит только наследников
-            Destroy(_gameLevelElements.First.Value, 1);
-            // удаляем запись из основного листа элементов уровня
-            _gameLevelElements.RemoveFirst();
+            Vector3 position = _gameLevelElements.First.Value.transform.position;
+
+            if (position.z > _lineVisibleCount + _gameBoxScaler)
+            {
+                // вызываем удаление и растворение класса элемента уровня
+                _gameLevelElements.First.Value.GetComponent<GameLevelElementSystem>().DissolveAndDestroy(1f);
+                // чтобы элемент продолжал двигаться вперед, записываем его в список растворяемых элементов
+                _gameDissolvedElements.AddFirst(_gameLevelElements.First.Value);
+                // запускаем процесс удаления элемента уже тут, так как прошлая команда удалит только наследников
+                Destroy(_gameLevelElements.First.Value, 1);
+                // удаляем запись из основного листа элементов уровня
+                _gameLevelElements.RemoveFirst();
+            }
         }
     }
     // создание новых элементов уровня в конце списка при удалении с начала
@@ -275,6 +283,30 @@ public class GameLevelSystem : MonoBehaviour
 
             // если лимитный режим, то инкремируем счётчик
             if (_gameLevelType == LevelType.limmit) _lineCurrentCount++;
+        }
+        // как только все линии уровня были построены
+        else if (_lineCurrentCount == _lineMaxCount && _gameLevelType == LevelType.limmit)
+        {
+            // как только достигнут лимитный максимум создаём финиш
+            GameObject element = Instantiate(_gameLevelElementPrefab, transform) as GameObject;
+
+            Vector3 position = _gameLevelElements.Last.Value.transform.position;
+
+            position.z = position.z - _gameBoxScaler;
+            element.transform.position = position;
+
+            var elementSystem = element.GetComponent<GameLevelElementSystem>();
+
+            elementSystem
+                .SetSectorCount(_gameLevelWidth)
+                .SetBoxScale(_gameBoxScaler)
+                .SetBorderType(GameLevelElementSystem.BorderType.Both);
+
+            elementSystem.SolveGameLevelFinishLine(1);  // создаём финиш
+
+            _gameLevelElements.AddLast(element);
+
+            SetGameLevelType(LevelType.infinity);       // переводим в режим бесконечной генерации
         }
     }
     public void MovingLevelDown(float range)

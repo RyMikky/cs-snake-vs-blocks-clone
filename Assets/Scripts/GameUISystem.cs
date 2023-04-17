@@ -10,14 +10,15 @@ public class GameUISystem : MonoBehaviour
     public GameObject _aboutScreen;
     public GameObject _bestScoreScreen;
     public GameObject _settingsScreen;
-    public GameObject _statsScreen;
+    public GameObject _winnerScreen;
+    public GameObject _loserScreen;
 
     public GameObject _gameLevel;
     public GameObject _audioEngine;
 
     public enum Mode
     {
-        menu, select, about, score, aqua, settings, game
+        menu, select, about, score, settings, game, winner, loser
     }
 
     public Mode _activeMode = Mode.menu;
@@ -43,25 +44,38 @@ public class GameUISystem : MonoBehaviour
             case Mode.menu:
                 ActivateMenuScreen();
                 break;
+
             case Mode.select:
                 ActivateSelectScreen();
                 break;
+
             case Mode.about:
                 ActivateAboutScreen();
                 break;
+
             case Mode.score:
                 ActivateBestScoreScreen();
                 break;
-            case Mode.aqua:
-                ActivateAquaScreen();
+
+            case Mode.settings:
+                ActivateSettingsScreen();
                 break;
+
+            case Mode.winner:
+                ActivateWinnerScreen();
+                break;
+
+            case Mode.loser:
+                ActivateLoserScreen();
+                break;
+
             case Mode.game:
                 CloseAllScreen();
                 break;
         }
     }
 
-    public void EnterMainMenu()
+    public GameUISystem EnterMainMenu()
     {
         if (Input.GetButtonUp("Cancel"))
         {
@@ -77,136 +91,157 @@ public class GameUISystem : MonoBehaviour
                 _activeMode = _archiveMode;
             }
         }
+
+        return this;
     }
 
-    public void ActivateSelectScreen()
+    // активация главного меню
+    public GameUISystem ActivateMenuScreen()
     {
-        _activeMode = Mode.select;
-        _menuScreen.SetActive(false);
-        _selectScreen.SetActive(true);
-        _statsScreen.SetActive(false);
-        _bestScoreScreen.SetActive(false);
-        _settingsScreen.SetActive(false);
-        _aboutScreen.SetActive(false);
+        if (_activeMode != Mode.menu)
+        {
+            _activeMode = Mode.menu;
 
-        //_gameLevel.GetComponent<GameLevelEngine>().SetTowerRotation(false);
-        //_audioEngine.GetComponent<AudioEngine>().SetBackgroundVolume(0.8f);
+            _menuScreen.SetActive(true);
+            _selectScreen.SetActive(false);
+            _aboutScreen.SetActive(false);
+            _bestScoreScreen.SetActive(false);
+            _settingsScreen.SetActive(false);
+            _winnerScreen.SetActive(false);
+            _loserScreen.SetActive(false);
+        }
+
+        return this;
     }
-
-    public void ActivateAboutScreen()
+    // активация подменю выбора уровня
+    public GameUISystem ActivateSelectScreen()
     {
-        _activeMode = Mode.about;
-        _menuScreen.SetActive(false);
-        _selectScreen.SetActive(false);
-        _statsScreen.SetActive(false);
-        _bestScoreScreen.SetActive(false);
-        _settingsScreen.SetActive(false);
-        _aboutScreen.SetActive(true);
+        if (_activeMode != Mode.select)
+        {
+            _activeMode = Mode.select;
 
-        //_gameLevel.GetComponent<GameLevelEngine>().SetTowerRotation(false);
-        //_audioEngine.GetComponent<AudioEngine>().SetBackgroundVolume(0.8f);
+            _menuScreen.SetActive(false);
+            _selectScreen.SetActive(true);
+            _aboutScreen.SetActive(false);
+            _bestScoreScreen.SetActive(false);
+            _settingsScreen.SetActive(false);
+            _winnerScreen.SetActive(false);
+            _loserScreen.SetActive(false);
+        }
+
+        return this;
     }
-
-    public void ActivateSettingsScreen()
+    // активация окна About
+    public GameUISystem ActivateAboutScreen()
     {
-        _activeMode = Mode.settings;
-        _menuScreen.SetActive(false);
-        _selectScreen.SetActive(false);
-        _statsScreen.SetActive(false);
-        _bestScoreScreen.SetActive(false);
-        _settingsScreen.SetActive(true);
-        _aboutScreen.SetActive(false);
+        if (_activeMode != Mode.about)
+        {
+            _activeMode = Mode.about;
 
-        //_gameLevel.GetComponent<GameLevelEngine>().SetTowerRotation(false);
-        //_audioEngine.GetComponent<AudioEngine>().SetBackgroundVolume(0.8f);
+            _menuScreen.SetActive(false);
+            _selectScreen.SetActive(false);
+            _aboutScreen.SetActive(true);
+            _bestScoreScreen.SetActive(false);
+            _settingsScreen.SetActive(false);
+            _winnerScreen.SetActive(false);
+            _loserScreen.SetActive(false);
+        }
+
+        return this;
     }
-
-    public void ActivateBestScoreScreen()
+    // активация окна со списком достижений
+    public GameUISystem ActivateBestScoreScreen()
     {
-        _activeMode = Mode.score;
-        _menuScreen.SetActive(false);
-        _selectScreen.SetActive(false);
-        _statsScreen.SetActive(false);
-        _bestScoreScreen.SetActive(true);
-        _settingsScreen.SetActive(false);
-        _aboutScreen.SetActive(false);
+        if (_activeMode != Mode.score)
+        {
+            _activeMode = Mode.score;
 
-        //_gameLevel.GetComponent<GameLevelEngine>().SetTowerRotation(false);
-        //_audioEngine.GetComponent<AudioEngine>().SetBackgroundVolume(0.8f);
+            _menuScreen.SetActive(false);
+            _selectScreen.SetActive(false);
+            _aboutScreen.SetActive(false);
+            _bestScoreScreen.SetActive(true);
+            _settingsScreen.SetActive(false);
+            _winnerScreen.SetActive(false);
+            _loserScreen.SetActive(false);
+        }
+
+        return this;
     }
-
-    public void ActivateMenuScreen()
+    // активация меню настроек
+    public GameUISystem ActivateSettingsScreen()
     {
-        _activeMode = Mode.menu;
-        _selectScreen.SetActive(false);
-        _aboutScreen.SetActive(false);
-        _statsScreen.SetActive(false);
-        _bestScoreScreen.SetActive(false);
-        _settingsScreen.SetActive(false);
-        _menuScreen.SetActive(true);
+        if (_activeMode != Mode.settings)
+        {
+            _activeMode = Mode.settings;
 
-        //_gameLevel.GetComponent<GameLevelEngine>().SetTowerRotation(false);
-        //_audioEngine.GetComponent<AudioEngine>().SetBackgroundVolume(0.8f);
+            _menuScreen.SetActive(false);
+            _selectScreen.SetActive(false);
+            _aboutScreen.SetActive(false);
+            _bestScoreScreen.SetActive(false);
+            _settingsScreen.SetActive(true);
+            _winnerScreen.SetActive(false);
+            _loserScreen.SetActive(false);
+        }
+
+        return this;
     }
-
-    public void ActivateAquaScreen()
+    // активация меню победы
+    public GameUISystem ActivateWinnerScreen()
     {
-        _activeMode = Mode.aqua;
-        _selectScreen.SetActive(false);
-        _aboutScreen.SetActive(false);
-        _statsScreen.SetActive(true);
-        _bestScoreScreen.SetActive(false);
-        _settingsScreen.SetActive(false);
-        _menuScreen.SetActive(false);
+        if (_activeMode != Mode.winner)
+        {
+            _activeMode = Mode.winner;
 
-        //_gameLevel.GetComponent<GameLevelEngine>().SetTowerRotation(false);
-        //_audioEngine.GetComponent<AudioEngine>().SetBackgroundVolume(0.8f);
+            _menuScreen.SetActive(false);
+            _selectScreen.SetActive(false);
+            _aboutScreen.SetActive(false);
+            _bestScoreScreen.SetActive(false);
+            _settingsScreen.SetActive(false);
+            _winnerScreen.SetActive(true);
+            _loserScreen.SetActive(false);
+        }
+
+        return this;
     }
-
-    public void ActivateAquaLoseScreen()
+    // активация меню поражения
+    public GameUISystem ActivateLoserScreen()
     {
-        _activeMode = Mode.aqua;
-        _selectScreen.SetActive(false);
-        _aboutScreen.SetActive(false);
-        _menuScreen.SetActive(false);
-        _bestScoreScreen.SetActive(false);
-        _settingsScreen.SetActive(false);
-        _statsScreen.SetActive(true);
+        if (_activeMode != Mode.loser)
+        {
+            _activeMode = Mode.loser;
 
-        //_gameLevel.GetComponent<GameLevelEngine>().SetTowerRotation(false);
-        //_statsScreen.GetComponent<AquaScreenEngine>().SetScreenMode(AquaScreenEngine.Mode.lose);
-        //_audioEngine.GetComponent<AudioEngine>().SetBackgroundVolume(0.8f);
+            _menuScreen.SetActive(false);
+            _selectScreen.SetActive(false);
+            _aboutScreen.SetActive(false);
+            _bestScoreScreen.SetActive(false);
+            _settingsScreen.SetActive(false);
+            _winnerScreen.SetActive(false);
+            _loserScreen.SetActive(true);
+        }
+
+        return this;
     }
 
-    public void ActivateAquaWinScreen()
+    // закрыть все окна и дать управление игроку
+    public GameUISystem CloseAllScreen()
     {
-        _activeMode = Mode.aqua;
-        _selectScreen.SetActive(false);
-        _aboutScreen.SetActive(false);
-        _menuScreen.SetActive(false);
-        _bestScoreScreen.SetActive(false);
-        _settingsScreen.SetActive(false);
-        _statsScreen.SetActive(true);
+        if (_activeMode != Mode.game)
+        {
+            _activeMode = Mode.game;
 
-        //_gameLevel.GetComponent<GameLevelEngine>().SetTowerRotation(false);
-        //_statsScreen.GetComponent<AquaScreenEngine>().SetScreenMode(AquaScreenEngine.Mode.win);
-        //_audioEngine.GetComponent<AudioEngine>().SetBackgroundVolume(0.8f);
+            _menuScreen.SetActive(false);
+            _selectScreen.SetActive(false);
+            _aboutScreen.SetActive(false);
+            _bestScoreScreen.SetActive(false);
+            _settingsScreen.SetActive(false);
+            _winnerScreen.SetActive(false);
+            _loserScreen.SetActive(true);
+        }
+
+        return this;
     }
 
-    public void CloseAllScreen()
-    {
-        _activeMode = Mode.game;
-        _selectScreen.SetActive(false);
-        _aboutScreen.SetActive(false);
-        _menuScreen.SetActive(false);
-        _statsScreen.SetActive(false);
-        _bestScoreScreen.SetActive(false);
-        _settingsScreen.SetActive(false);
-
-        //_gameLevel.GetComponent<GameLevelEngine>().SetTowerRotation(true);
-        //_audioEngine.GetComponent<AudioEngine>().SetBackgroundVolume(0.6f);
-    }
-
+    // основная функция выключения приложения
     public void ApplicationTurnOff()
     {
         if (EditorApplication.isPlaying)
@@ -216,12 +251,10 @@ public class GameUISystem : MonoBehaviour
 
         Application.Quit();
     }
-
     public void StartNewGame()
     {
         //GetComponentInParent<GameEngine>().ConstructNewGameLevel();
     }
-
     public void StartNextGame()
     {
         //GetComponentInParent<GameEngine>().ConstructNextGameLevel();

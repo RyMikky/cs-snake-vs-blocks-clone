@@ -50,6 +50,7 @@ MonoBehaviour:
   _elementSectorPrefab: {fileID: 3605950351777706807, guid: 21e6edbd11dc8594288c225ca2adbd00, type: 3}
   _elementBoxPrefab: {fileID: 8716603799612582565, guid: 36c1cb85445d75a4bbc7869fc6a0dc29, type: 3}
   _elementSnakePrefab: {fileID: 6613297857288165031, guid: b74e04b91a8311e4bbca5a2cecb6f0af, type: 3}
+  _finishCollider: {fileID: 3035522010841233588, guid: 9cdd97771a896e44484e010fd10a2d25, type: 3}
   _activationMode: 0
   _borderType: 3
   _elementSectorCount: 6

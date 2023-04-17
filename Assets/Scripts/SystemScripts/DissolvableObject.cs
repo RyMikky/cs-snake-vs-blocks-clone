@@ -23,38 +23,70 @@ public class DissolvableObject : MonoBehaviour
         }
     }
 
-    public void StartSolving()
+    private void TryGetRenderer()
+    {
+        _renderer = GetComponent<Renderer>();
+    }
+
+    public DissolvableObject StartSolving()
     {
         _isSolving = true;
         _solveTimer = 0f;
+        return this;
     }
 
-    public void StartSolving(float time)
+    public DissolvableObject StartSolving(float time)
     {
         _isSolving = true;
         _solveTimer = 0f;
         solveDuration = time;
+        return this;
     }
 
-    public void StartDissolving()
+    public DissolvableObject StartDissolving()
     {
         _isDissolving = true;
         _dissolveTimer = 0f;
+        return this;
     }
 
-    public void StartDissolving(float time)
+    public DissolvableObject StartDissolving(float time)
     {
         _isDissolving = true;
         _dissolveTimer = 0f;
         dissolveDuration = time;
+        return this;
     }
 
-    
+    // используется для изменения цвета линии финиша
+    public DissolvableObject SetMainColor(Color color)
+    {
+        if (_renderer == null)
+        {
+            TryGetRenderer();
+        }
+
+        if(_renderer != null)
+        {
+            _renderer.material.SetColor("_BaseColor", color);
+        }
+        else
+        {
+            Debug.Log("Нет рендерера");
+        }
+        
+        return this;
+    }
 
     protected virtual void Update()
     {
         if (_isDissolving)
         {
+            if (_renderer == null)
+            {
+                TryGetRenderer();
+            }
+
             // Увеличиваем таймер на время, прошедшее с последнего кадра
             _dissolveTimer += Time.deltaTime;
 
@@ -81,12 +113,16 @@ public class DissolvableObject : MonoBehaviour
 
         if (_isSolving)
         {
+            if (_renderer == null)
+            {
+                TryGetRenderer();
+            }
+
             // Увеличиваем таймер на время, прошедшее с последнего кадра
             _solveTimer += Time.deltaTime;
 
             // Вычисляем значение параметра "прозрачность" на основе текущего времени
             float param = Mathf.Clamp01(_solveTimer / solveDuration);
-
             
             // необходимо проверять наличие, так как может оказаться так,
             // что на одну миллисекунду скрипт будет быстрее создания компонентов
